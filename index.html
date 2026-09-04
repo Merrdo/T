@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Takvimim</title>
 
 <!-- PWA: manifest ve tema rengi -->
@@ -27,6 +27,20 @@
   html, body {
     height: 100%;
     width: 100%;
+    /* Pinch/iki parmakla yakınlaştırmayı ve çift dokunma zoom'unu engelle */
+    touch-action: pan-x pan-y;
+  }
+
+  /* ---------- Scrollbar'ları gizle (kaydırma işlevi aynen çalışır) ---------- */
+  * {
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* IE / eski Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none;              /* Chrome, Safari, yeni Edge */
+    width: 0;
+    height: 0;
   }
 
   * {
@@ -3237,6 +3251,38 @@
 
   renderCalendarGrid();
   updateCalendarSelectedInfo();
+</script>
+
+<script>
+  // ---------- Yakınlaştırmayı Engelle ----------
+  // Safari, viewport meta etiketini (user-scalable=no) yok sayıp iki
+  // parmakla veya çift dokunarak yakınlaştırmaya izin verebiliyor;
+  // bu yüzden jest olaylarını da burada engelliyoruz.
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach((eventName) => {
+    document.addEventListener(eventName, (e) => e.preventDefault());
+  });
+
+  // Çift dokunmayla yakınlaştırmayı engelle (iOS Safari).
+  let lastTouchEndAt = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEndAt <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEndAt = now;
+  }, { passive: false });
+
+  // İki parmakla dokunmayı (pinch) daha da erken aşamada engelle.
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Ctrl/Cmd + tekerlek ile (trackpad pinch) tarayıcı yakınlaştırmasını engelle.
+  document.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) e.preventDefault();
+  }, { passive: false });
 </script>
 
 <script>
