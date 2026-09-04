@@ -1,0 +1,12 @@
+{
+  "name": "Takvimim",
+  "short_name": "Takvimim",
+  "description": "Takvim, yapılacaklar listesi, karar çarkı ve kronometre bir arada.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#2b2f4a",
+  "theme_color": "#2b2f4a",
+  "lang": "tr"
+}
