@@ -2189,22 +2189,27 @@
 
 <script>
   // Sayfa 1'deki butona her tıklandığında tema (arka plan + yazı rengi) değişir.
-  // Toplam 3 tema: orijinal (mor-mavi), koyu ve yeşil.
+  // Toplam 4 tema: orijinal (mor-mavi), koyu, yeşil ve krem.
   const themes = [
     {
       name: 'Orijinal',
-      gradient: 'linear-gradient(135deg, #2b2f4a 0%, #3a3f6b 50%, #4a4e78 100%)',
+      gradient: 'linear-gradient(135deg, #2b2f4a 0%, #2b2f4a 50%, #2b2f4a 100%)',
       text: '#f2f2f7'
     },
     {
       name: 'Koyu',
-      gradient: 'linear-gradient(135deg, #050505 0%, #121212 50%, #1c1c1c 100%)',
+      gradient: 'linear-gradient(135deg, #121212 0%, #121212 50%, #121212 100%)',
       text: '#f5f5f5'
     },
     {
       name: 'Yeşil',
-      gradient: 'linear-gradient(135deg, #0f3d24 0%, #1f7a4d 50%, #35c281 100%)',
-      text: '#f2fbf6'
+      gradient: 'linear-gradient(135deg, #dff0d0 0%, #dff0d0 50%, #dff0d0 100%)',
+      text: '#3b5943'
+    },
+    {
+      name: 'Krem',
+      gradient: 'linear-gradient(135deg, #f2e8d5 0%, #f2e8d5 50%, #f2e8d5 100%)',
+      text: '#4a3f2f'
     }
   ];
 
@@ -2316,12 +2321,21 @@
     slide.className = 'theme-swatch-slide' + (i === 0 ? ' is-active' : '');
 
     // Alt katman: hex kodlu renk şeritleri (detay görünüm).
-    extractHexStops(theme.gradient).forEach((hex) => {
+    // Aynı renk birden fazla kez tekrar ediyorsa (geçişsiz/düz temalarda
+    // olduğu gibi) sadece tek bir şerit gösterilir; bu da flex sayesinde
+    // otomatik olarak tam ortada durur.
+    const uniqueHexes = [...new Set(extractHexStops(theme.gradient))];
+    uniqueHexes.forEach((hex) => {
       const colorEl = document.createElement('div');
       colorEl.className = 'swatch-color';
       colorEl.style.background = hex;
       const span = document.createElement('span');
       span.textContent = hex.replace('#', '').toUpperCase();
+      const labelColor = getCheckColorForGradient(hex);
+      span.style.color = labelColor;
+      span.style.textShadow = labelColor === '#ffffff'
+        ? '0 1px 2px rgba(0, 0, 0, 0.35)'
+        : '0 1px 2px rgba(255, 255, 255, 0.35)';
       colorEl.appendChild(span);
       slide.appendChild(colorEl);
     });
