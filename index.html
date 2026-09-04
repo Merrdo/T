@@ -196,7 +196,10 @@
     position: absolute;
     left: 0;
     top: 0;
+    -webkit-appearance: none;
     appearance: none;
+    background: transparent;
+    border: none;
     cursor: pointer;
     margin: 0;
   }
@@ -261,6 +264,199 @@
   button.is-pressed .button_top {
     /* Push the button downwards when pressed - sabit sürede, giriş türünden bağımsız */
     transform: translateY(0);
+  }
+
+  /* From Uiverse.io by corentinchene */
+  /* Ana sayfada Button'ın altına yerleşecek anahtar; şimdilik işlevsiz,
+     yalnızca görsel amaçlı. Orijinalindeki position:absolute/translate
+     kaldırıldı, çünkü burada bir flex kolonu içinde normal akışta
+     Button'ın altında durması gerekiyor. */
+  .home-toggle {
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .home-toggle input {
+    display: none;
+  }
+
+  .home-toggle .track {
+    position: relative;
+    display: block;
+    width: 41px;
+    height: 22px;
+    background: #080808;
+    border-radius: 15px;
+    transition: background 0.25s;
+  }
+
+  .home-toggle .thumb {
+    position: absolute;
+    top: 2.5px;
+    left: 2.3px;
+    width: 27px;
+    height: 17px;
+    background: #fff;
+    border-radius: 8px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 6px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  .home-toggle input:checked + .track .thumb {
+    transform: translateX(9px);
+  }
+
+  /* Anahtar aktif edildiğinde (checked) sayfadaki button_top butonları
+     antresit (koyu gri) tonuna geçer — referans görseldeki takvim
+     hücrelerinden ilham alındı. Alt katman (--button_outline_color)
+     siyah kaldığı için üst yüzeyle arasında hâlâ belirgin bir
+     3D gölge/derinlik farkı okunuyor. */
+  body.is-anthracite .button_top {
+    background: #3b3e42;
+    border-color: #000;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite button {
+    --button_outline_color: #000;
+  }
+
+  /* Sayfa 2: anahtar aktifken görev listesindeki beyaz yüzeyler
+     (Görev Ekle / Düzenle butonları, checkbox daireleri, silme
+     butonları) da aynı antresit tonuna geçer — Sayfa 1'deki
+     button_top ile birebir aynı mantık. Kenarlık siyah kaldığı
+     için 3D gölge farkı burada da okunur kalıyor. */
+  body.is-anthracite .add-task-btn {
+    background-color: #3b3e42;
+    border-color: #000;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .brutal-radio-custom {
+    background-color: #3b3e42;
+    border-color: #000;
+  }
+
+  body.is-anthracite .delete-btn {
+    background-color: #3b3e42;
+    border-color: #000;
+    color: #f2f2f4;
+  }
+
+  /* Sayfa 3: anahtar aktifken tema paleti kartındaki beyaz yüzeyler
+     (kartın kendisi, alt bar, ok butonları) da aynı antresit tonuna
+     geçer. Nokta göstergeler (swatch-dot) siyah/gri kalır — Sayfa 1'deki
+     nav-slider gibi bunlar zaten "aktif göstergesi", beyaz yüzey değil. */
+  body.is-anthracite .theme-swatch-card {
+    background: #3b3e42;
+  }
+
+  body.is-anthracite .theme-swatch-bar {
+    background: #3b3e42;
+    border-top-color: #000;
+  }
+
+  body.is-anthracite .swatch-arrow {
+    background: #3b3e42;
+    border-color: #000;
+    color: #f2f2f4;
+  }
+
+  /* Sayfa 4: anahtar aktifken çark kartındaki beyaz yüzeyler (sonuç
+     kartı, seçenekler kartı, renk seçim pop-up'ı) da antresit tonuna
+     geçer; üzerlerindeki siyah metinler okunabilirlik için açık renge
+     döner. Dinamik renkli öğeler (seçenek noktaları, göbek, renk
+     kareleri) JS ile ayarlandığından dokunulmadı. */
+  body.is-anthracite .wheel-result:not(.is-revealed) {
+    background: #3b3e42;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .wheel-result.is-placeholder {
+    color: rgba(242, 242, 244, 0.45);
+  }
+
+  body.is-anthracite .wheel-options-card {
+    background: #3b3e42;
+  }
+
+  body.is-anthracite .wheel-options-title {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .wheel-option-text,
+  body.is-anthracite .wheel-option-input {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .wheel-option-input::placeholder {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .wheel-color-card {
+    background: #3b3e42;
+  }
+
+  body.is-anthracite .wheel-color-title,
+  body.is-anthracite .wheel-color-subtitle {
+    color: #f2f2f4;
+  }
+
+  /* Sayfa 5: anahtar aktifken kronometre kartı ve ondan açılan büyük
+     takvim arayüzündeki beyaz yüzeyler de aynı tona geçer. Seçili gün
+     (pembe) ve hafta sonu (kırmızı) vurgu renkleri korunuyor. */
+  body.is-anthracite .stopwatch-display {
+    background: #3b3e42;
+  }
+
+  body.is-anthracite .stopwatch-time-row,
+  body.is-anthracite .stopwatch-hint {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .calendar-back-btn,
+  body.is-anthracite .calendar-nav-btn {
+    background-color: #3b3e42;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .calendar-card,
+  body.is-anthracite .calendar-selected-info {
+    background: #3b3e42;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .calendar-month-label,
+  body.is-anthracite .calendar-day {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .calendar-weekday {
+    color: rgba(242, 242, 244, 0.45);
+  }
+
+  body.is-anthracite .calendar-day.is-outside {
+    color: rgba(242, 242, 244, 0.25);
+  }
+
+  /* Alt nav bar: anahtar aktifken çubuğun beyaz zemini antresit tona
+     geçer, seçili olmayan sekme yazıları da buna göre açık renge
+     döner. Seçili sekmeyi taşıyan kayan alan (nav-slider) zaten
+     --main-color ile koyu/siyah olduğundan dokunulmadı — Sayfa 3'teki
+     swatch-dot gibi bu da bir "aktif gösterge", beyaz yüzey değil. */
+  body.is-anthracite .wrapper {
+    --bg-color: #3b3e42;
+    --font-color-dark: #f2f2f4;
+  }
+
+  /* Button + anahtarı dikeyde ortalanmış şekilde alt alta hizalar */
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
   }
 
   /* From Uiverse.io by ratue1256 (checkbox'a uyarlandı, bağımsız işaretlenebilir) */
@@ -351,29 +547,25 @@
     100% { transform: scale(1); }
   }
 
-  /* İşaretlenen görevin metni yumuşakça üstü çizilir */
+  /* İşaretlenen görevin metni yumuşakça üstü çizilir.
+     Not: Eskiden tek bir ::after çubuğuyla (top: 50%, width animasyonlu)
+     çizim yapılıyordu; bu, metin birden fazla satıra sarıldığında sadece
+     kutunun ortasında sabit bir yere çizgi çekiyor, gerçek satırların
+     üzerinden geçmiyordu. Native text-decoration-line kullanmak, metin
+     kaç satıra sarılırsa sarılsın her satırın kendi üzerinden çizgi
+     çizilmesini otomatik olarak sağlar; rengi şeffaftan currentColor'a
+     geçirerek yumuşak bir "çiziliyor" animasyonu korunur. */
   .brutal-radio-text {
     position: relative;
-    transition: opacity 0.25s ease;
-  }
-
-  .brutal-radio-text::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    height: 2px;
-    width: 0%;
-    background-color: currentColor;
-    transition: width 0.25s ease;
+    text-decoration-line: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: transparent;
+    transition: opacity 0.25s ease, text-decoration-color 0.25s ease;
   }
 
   .brutal-radio:checked ~ .brutal-radio-text {
     opacity: 0.55;
-  }
-
-  .brutal-radio:checked ~ .brutal-radio-text::after {
-    width: 100%;
+    text-decoration-color: currentColor;
   }
 
   /* ---------- Görev satırları için yumuşak giriş/çıkış animasyonu ---------- */
@@ -1660,10 +1852,20 @@
 <div class="app">
 
   <section class="page is-active" id="page-1">
-    <!-- From Uiverse.io by Voxybuns -->
-    <button>
-      <span class="button_top"> Button </span>
-    </button>
+    <div class="home-content">
+      <!-- From Uiverse.io by Voxybuns -->
+      <button>
+        <span class="button_top"> Button </span>
+      </button>
+
+      <!-- From Uiverse.io by corentinchene -->
+      <label class="toggle home-toggle">
+        <input type="checkbox" />
+        <span class="track">
+          <span class="thumb"></span>
+        </span>
+      </label>
+    </div>
   </section>
 
   <section class="page" id="page-2">
@@ -1928,6 +2130,19 @@
       moveSlider(input);
     });
   });
+</script>
+
+<script>
+  // Ana sayfadaki anahtar aktif edildiğinde button_top butonları antresit
+  // tonuna geçer (body.is-anthracite class'ı üzerinden CSS tetiklenir).
+  const homeToggleInput = document.querySelector('.home-toggle input');
+  if (homeToggleInput) {
+    const syncAnthracite = () => {
+      document.body.classList.toggle('is-anthracite', homeToggleInput.checked);
+    };
+    homeToggleInput.addEventListener('change', syncAnthracite);
+    syncAnthracite();
+  }
 </script>
 
 <script>
