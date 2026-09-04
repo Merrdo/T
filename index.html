@@ -1614,27 +1614,19 @@
     flex-shrink: 0;
   }
 
-  /* ---------- Büyük Takvim Arayüzü (Sayfa 5'ten açılan tam ekran görünüm) ---------- */
-  .calendar-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 90;
-    display: flex;
+  /* ---------- Sayfa 6: Büyük Takvim Sayfası ----------
+     Diğer sayfalar (.page) gibi tema katmanının (theme-layer) üzerinde
+     şeffaf durur; kendine ait koyu/opak bir zemini veya bulanıklık
+     efekti yoktur — geçiş animasyonu da diğer sayfalarla birebir aynıdır
+     (bkz. .page / .page.is-active / .page.is-leaving). Nav bar'da sekmesi
+     olmadığından yalnızca Sayfa 5'teki "Takvim" butonuyla erişilir. */
+  #page-6 {
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     gap: 1.1rem;
     padding: calc(22px + env(safe-area-inset-top)) 20px calc(22px + env(safe-area-inset-bottom));
     overflow-y: auto;
-    opacity: 0;
-    transform: translateY(28px) scale(0.98);
-    pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .calendar-overlay.is-open {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
   }
 
   .calendar-topbar {
@@ -1928,8 +1920,6 @@
     <!-- "Şimdi Ne Yapsam?" karar çarkı: kullanıcı kendi seçeneklerini
          ekleyip silebiliyor, çevirince rastgele biri seçiliyor. -->
     <div class="wheel-page">
-      <h1 class="wheel-title">Şimdi ne yapsam?</h1>
-
       <div class="wheel-stage">
         <div class="wheel-pointer">
           <div class="wheel-pointer-inner" id="wheelPointerInner">
@@ -2007,6 +1997,42 @@
     </div>
   </section>
 
+  <!-- Sayfa 6: Büyük Takvim. Diğer sayfalar gibi tema katmanının üstünde
+       şeffaf durur (kendine ait koyu/opak bir zemini yok). Nav bar'da
+       sekmesi yok; yalnızca Sayfa 5'teki "Takvim" butonuyla açılır. -->
+  <section class="page" id="page-6">
+    <div class="calendar-topbar">
+      <button type="button" class="calendar-back-btn" id="calendarBackBtn" aria-label="Geri dön">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="calendar-topbar-title">Takvim</span>
+      <span class="calendar-topbar-spacer" aria-hidden="true"></span>
+    </div>
+
+    <div class="calendar-card">
+      <div class="calendar-nav">
+        <button type="button" class="calendar-nav-btn" id="calendarPrevBtn" aria-label="Önceki ay">
+          <svg viewBox="0 0 24 24" width="15" height="15">
+            <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="calendar-month-label" id="calendarMonthLabel">Eylül 2026</span>
+        <button type="button" class="calendar-nav-btn" id="calendarNextBtn" aria-label="Sonraki ay">
+          <svg viewBox="0 0 24 24" width="15" height="15">
+            <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="calendar-weekdays" id="calendarWeekdays"></div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <div class="calendar-selected-info" id="calendarSelectedInfo"></div>
+  </section>
+
 </div>
 
 <!-- Sayfa 4: seçenek rengini değiştirmek için açılan pop-up. -->
@@ -2021,40 +2047,6 @@
     </div>
     <div class="wheel-color-grid" id="wheelColorGrid"></div>
   </div>
-</div>
-
-<!-- Sayfa 5'teki "Takvim" butonuyla açılan, ekranı tam kaplayan büyük takvim arayüzü. -->
-<div class="calendar-overlay" id="calendarOverlay" aria-hidden="true">
-  <div class="calendar-topbar">
-    <button type="button" class="calendar-back-btn" id="calendarBackBtn" aria-label="Geri dön">
-      <svg viewBox="0 0 24 24" width="18" height="18">
-        <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    <span class="calendar-topbar-title">Takvim</span>
-    <span class="calendar-topbar-spacer" aria-hidden="true"></span>
-  </div>
-
-  <div class="calendar-card">
-    <div class="calendar-nav">
-      <button type="button" class="calendar-nav-btn" id="calendarPrevBtn" aria-label="Önceki ay">
-        <svg viewBox="0 0 24 24" width="15" height="15">
-          <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <span class="calendar-month-label" id="calendarMonthLabel">Eylül 2026</span>
-      <button type="button" class="calendar-nav-btn" id="calendarNextBtn" aria-label="Sonraki ay">
-        <svg viewBox="0 0 24 24" width="15" height="15">
-          <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="calendar-weekdays" id="calendarWeekdays"></div>
-    <div class="calendar-grid" id="calendarGrid"></div>
-  </div>
-
-  <div class="calendar-selected-info" id="calendarSelectedInfo"></div>
 </div>
 
 <!-- From Uiverse.io by andrew-demchenk0 (uyarlandı) -->
@@ -3329,7 +3321,7 @@
   // ay içinde gezinme ve gün seçme burada gerçekleşir. Geri butonu (veya
   // Esc) katmanı kapatıp Sayfa 5'e geri döner.
   const calendarOpenBtn = document.getElementById('calendarOpenBtn');
-  const calendarOverlay = document.getElementById('calendarOverlay');
+  const calendarPage = document.getElementById('page-6');
   const calendarBackBtn = document.getElementById('calendarBackBtn');
   const calendarPrevBtn = document.getElementById('calendarPrevBtn');
   const calendarNextBtn = document.getElementById('calendarNextBtn');
@@ -3421,20 +3413,22 @@
       `${calendarSelectedDate.getDate()} ${CALENDAR_MONTHS[calendarSelectedDate.getMonth()]} ${calendarSelectedDate.getFullYear()}, ${dayName}`;
   };
 
+  // Sayfa 6 (Takvim), nav bar'daki 5 sekmenin dışında, yalnızca bu butonla
+  // açılan bağımsız bir sayfadır. Geçiş, diğer sekmelerle birebir aynı
+  // goToPage() akışını kullanır; tek fark nav bar üzerinden değil, doğrudan
+  // bu buton üzerinden tetiklenmesidir.
   const openCalendarOverlay = () => {
     calendarViewYear = calendarSelectedDate.getFullYear();
     calendarViewMonth = calendarSelectedDate.getMonth();
     renderCalendarGrid();
     updateCalendarSelectedInfo();
-    document.body.classList.add('is-calendar-open');
-    calendarOverlay.classList.add('is-open');
-    calendarOverlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-calendar-open'); // nav bar'ı gizler
+    goToPage('page-6');
   };
 
   const closeCalendarOverlay = () => {
     document.body.classList.remove('is-calendar-open');
-    calendarOverlay.classList.remove('is-open');
-    calendarOverlay.setAttribute('aria-hidden', 'true');
+    goToPage('page-5');
   };
 
   calendarOpenBtn.addEventListener('click', openCalendarOverlay);
@@ -3459,7 +3453,7 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && calendarOverlay.classList.contains('is-open')) {
+    if (e.key === 'Escape' && calendarPage.classList.contains('is-active')) {
       closeCalendarOverlay();
     }
   });
