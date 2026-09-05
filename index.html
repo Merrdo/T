@@ -441,6 +441,20 @@
     color: rgba(242, 242, 244, 0.25);
   }
 
+  body.is-anthracite .laps-page-card {
+    background: #3b3e42;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .laps-page-row {
+    color: #f2f2f4;
+    border-bottom-color: rgba(242, 242, 244, 0.15);
+  }
+
+  body.is-anthracite .laps-page-empty {
+    color: rgba(242, 242, 244, 0.45);
+  }
+
   /* Alt nav bar: anahtar aktifken çubuğun beyaz zemini antresit tona
      geçer, seçili olmayan sekme yazıları da buna göre açık renge
      döner. Seçili sekmeyi taşıyan kayan alan (nav-slider) zaten
@@ -1505,6 +1519,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    gap: 1rem;
   }
 
   .stopwatch-reset-btn {
@@ -1517,6 +1532,21 @@
   /* Süre sıfırken (henüz başlatılmamışken) Sıfırla butonu tamamen
      gizli kalır; ancak duraklatılıp elde bir süre birikince belirir. */
   .stopwatch-reset-btn.is-hidden {
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+  }
+
+  /* Sıfırla ile aynı satırda, solda yer alan "Turlarım" butonu; aynı
+     koşulla (süre sıfır değilken) belirir/gizlenir. */
+  .stopwatch-laps-btn {
+    padding: 0.75rem 1.6rem;
+    font-size: 1.05rem;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .stopwatch-laps-btn.is-hidden {
     opacity: 0;
     transform: scale(0.85);
     pointer-events: none;
@@ -1580,7 +1610,103 @@
     font-size: 0.85rem;
     color: var(--theme-text, #f2f2f7);
     opacity: 0.4;
+    transition: color 0.5s ease, opacity 0.4s ease;
+    text-align: center;
+  }
+
+  /* Tam ekran açıldığında 3 saniye görünür kalır, sonra kaybolur. */
+  .stopwatch-fullscreen-hint.is-hidden {
+    opacity: 0;
+  }
+
+  /* Sayının hemen üzerine eklenen görünmez katman: buraya dokunmak
+     kronometreyi duraklatıp tam ekrandan çıkar. Dokunma alanını
+     rakamların görsel sınırlarının biraz dışına taşırıyoruz ki parmakla
+     hedeflemesi kolay olsun. */
+  .stopwatch-fullscreen-time-row {
+    position: relative;
+  }
+
+  .stopwatch-exit-zone {
+    position: absolute;
+    inset: -1.4rem -1rem;
+    z-index: 5;
+    cursor: pointer;
+  }
+
+  /* Boş bir alana dokununca beliren "Tur" butonu; süre sıfırlanınca
+     veya sayaç kapatılınca tekrar gizlenir. */
+  .stopwatch-lap-btn {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .stopwatch-lap-btn.is-visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  /* Zaman + ipucu + Tur butonunu saran sabit boyutlu blok. Bu blok
+     kronometrenin gerçek dikey referans noktasıdır; boyutu tur sayısına
+     göre DEĞİŞMEZ. Tur listesi buna göre mutlak konumlandığı için,
+     liste büyüdükçe/küçüldükçe saat asla yukarı/aşağı kaymaz. */
+  .stopwatch-fullscreen-core {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  /* Kaydedilen turların listesi: normal akışın DIŞINDA, kutunun hemen
+     altına sabitlenir. Böylece tur eklenip liste büyüdüğünde yalnızca
+     kendi yüksekliği (max-height'a kadar) değişir; üstteki saatin
+     konumunu hiç etkilemez (önceki "kayma" sorununun kaynağı buydu). */
+  .stopwatch-laps {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: 0.9rem;
+    width: 100%;
+    max-width: 300px;
+    max-height: 26vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    opacity: 0;
+    transform: translate(-50%, 8px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .stopwatch-laps.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+
+  .stopwatch-lap-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--theme-text, #f2f2f7);
+    font-size: 0.85rem;
+    opacity: 0.8;
     transition: color 0.5s ease;
+  }
+
+  .stopwatch-lap-row .stopwatch-lap-index {
+    opacity: 0.5;
   }
 
   /* Sayaç çalışırken veya takvim açıkken alt nav bar tamamen gizlenir. */
@@ -1589,13 +1715,15 @@
   }
 
   body.is-stopwatch-running .navbar,
-  body.is-calendar-open .navbar {
+  body.is-calendar-open .navbar,
+  body.is-laps-open .navbar {
     opacity: 0;
     transform: translateY(28px);
   }
 
   body.is-stopwatch-running .navbar .wrapper,
-  body.is-calendar-open .navbar .wrapper {
+  body.is-calendar-open .navbar .wrapper,
+  body.is-laps-open .navbar .wrapper {
     pointer-events: none;
   }
 
@@ -1834,6 +1962,70 @@
     color: #121212;
     text-transform: capitalize;
   }
+
+  /* ---------- Sayfa 7: "Turlarım" Sayfası ----------
+     Sayfa 5'teki "Turlarım" butonuna basınca açılan, kaydedilen turların
+     listelendiği bağımsız sayfa. Takvim sayfasıyla (Sayfa 6) aynı görsel
+     dili kullanır: üst çubukta geri butonu + başlık, altında beyaz kart. */
+  #page-7 {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.1rem;
+    padding: calc(22px + env(safe-area-inset-top)) 20px calc(22px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+
+  .laps-page-card {
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 5px solid #000;
+    border-radius: 1.3em;
+    box-shadow: 8px 8px 0px 0px #000;
+    padding: 1.15rem 1.1rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .laps-page-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .laps-page-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #121212;
+    font-size: 0.95rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid rgba(18, 18, 18, 0.1);
+  }
+
+  .laps-page-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .laps-page-row .laps-page-index {
+    opacity: 0.5;
+  }
+
+  .laps-page-empty {
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: rgba(18, 18, 18, 0.45);
+    padding: 0.5rem 0;
+  }
 </style>
 </head>
 <body oncopy="return false" oncut="return false" onselectstart="return false" ondragstart="return false">
@@ -1973,6 +2165,7 @@
       </div>
 
       <div class="stopwatch-controls" id="stopwatchControls">
+        <button type="button" class="add-task-btn stopwatch-laps-btn is-hidden" id="stopwatchLapsBtn">Turlarım</button>
         <button type="button" class="add-task-btn stopwatch-reset-btn is-hidden" id="stopwatchResetBtn">Sıfırla</button>
       </div>
 
@@ -1988,12 +2181,20 @@
     </div>
 
     <!-- Sayaç çalışırken beliren, ekranı tam kaplayan büyük görünüm.
-         Dokunmak duraklatır. -->
-    <div class="stopwatch-fullscreen" id="stopwatchFullscreen" role="button" tabindex="0" aria-label="Kronometreyi duraklat">
-      <div class="stopwatch-fullscreen-time-row">
-        <span class="stopwatch-time" id="stopwatchTimeFull">00:00:00</span><span class="stopwatch-centis" id="stopwatchCentisFull">.00</span>
+         Sayının üzerindeki görünmez alana dokunmak duraklatıp tam
+         ekrandan çıkar; boş bir alana dokununca Tur butonu belirir. -->
+    <div class="stopwatch-fullscreen" id="stopwatchFullscreen">
+      <div class="stopwatch-fullscreen-core" id="stopwatchFullscreenCore">
+        <div class="stopwatch-fullscreen-time-row">
+          <span class="stopwatch-time" id="stopwatchTimeFull">00:00:00</span><span class="stopwatch-centis" id="stopwatchCentisFull">.00</span>
+          <!-- Görünmez çıkış alanı: sayının üzerine eklenir, dokununca kronometre duraklar ve tam ekrandan çıkılır -->
+          <div class="stopwatch-exit-zone" id="stopwatchExitZone" role="button" tabindex="0" aria-label="Kronometreyi duraklat ve tam ekrandan çık"></div>
+        </div>
+        <span class="stopwatch-fullscreen-hint" id="stopwatchFullscreenHint">Duraklatmak için dokun</span>
+
+        <button type="button" class="add-task-btn stopwatch-lap-btn" id="stopwatchLapBtn">Tur</button>
+        <div class="stopwatch-laps" id="stopwatchLaps"></div>
       </div>
-      <span class="stopwatch-fullscreen-hint">Duraklatmak için dokun</span>
     </div>
   </section>
 
@@ -2031,6 +2232,26 @@
     </div>
 
     <div class="calendar-selected-info" id="calendarSelectedInfo"></div>
+  </section>
+
+  <!-- Sayfa 7: "Turlarım". Sayfa 5'teki "Turlarım" butonuyla açılan,
+       kaydedilen turları listeleyen bağımsız sayfa (Sayfa 6/Takvim ile
+       aynı geçiş ve navbar-gizleme mantığını kullanır). -->
+  <section class="page" id="page-7">
+    <div class="calendar-topbar">
+      <button type="button" class="calendar-back-btn" id="lapsBackBtn" aria-label="Geri dön">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="calendar-topbar-title">Turlarım</span>
+      <span class="calendar-topbar-spacer" aria-hidden="true"></span>
+    </div>
+
+    <div class="laps-page-card">
+      <div class="laps-page-list" id="lapsPageList"></div>
+      <div class="laps-page-empty" id="lapsPageEmpty">Henüz tur eklenmedi.</div>
+    </div>
   </section>
 
 </div>
@@ -3192,15 +3413,26 @@
   const stopwatchFullscreen = document.getElementById('stopwatchFullscreen');
   const stopwatchTimeFullEl = document.getElementById('stopwatchTimeFull');
   const stopwatchCentisFullEl = document.getElementById('stopwatchCentisFull');
+  const stopwatchExitZone = document.getElementById('stopwatchExitZone');
+  const stopwatchFullscreenHint = document.getElementById('stopwatchFullscreenHint');
+  let stopwatchHintTimer = null;
+  const stopwatchLapBtn = document.getElementById('stopwatchLapBtn');
+  const stopwatchLapsEl = document.getElementById('stopwatchLaps');
+  const stopwatchLapsBtn = document.getElementById('stopwatchLapsBtn');
+  const lapsBackBtn = document.getElementById('lapsBackBtn');
+  const lapsPageList = document.getElementById('lapsPageList');
+  const lapsPageEmpty = document.getElementById('lapsPageEmpty');
 
   let swAccumulatedMs = 0; // Duraklatılana kadar biriken süre
   let swStartedAt = 0;     // Son "başlat"ın performance.now() zamanı
   let swRunning = false;
   let swRafId = null;
+  let stopwatchLaps = [];                // Kaydedilen turlar: { totalMs, splitMs }
+  let stopwatchControlsVisible = false;  // Tam ekranda boş alana dokununca Tur butonu görünür mü?
 
   const pad2 = (n) => String(n).padStart(2, '0');
 
-  const formatAndRenderTime = (ms) => {
+  const formatTime = (ms) => {
     const totalCentis = Math.floor(ms / 10);
     const centis = totalCentis % 100;
     const totalSeconds = Math.floor(totalCentis / 100);
@@ -3208,11 +3440,85 @@
     const totalMinutes = Math.floor(totalSeconds / 60);
     const minutes = totalMinutes % 60;
     const hours = Math.floor(totalMinutes / 60);
-    const timeText = `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`;
+    return {
+      timeText: `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`,
+      centisText: `.${pad2(centis)}`
+    };
+  };
+
+  const formatAndRenderTime = (ms) => {
+    const { timeText, centisText } = formatTime(ms);
     stopwatchTimeEl.textContent = timeText;
-    stopwatchCentisEl.textContent = `.${pad2(centis)}`;
+    stopwatchCentisEl.textContent = centisText;
     stopwatchTimeFullEl.textContent = timeText;
-    stopwatchCentisFullEl.textContent = `.${pad2(centis)}`;
+    stopwatchCentisFullEl.textContent = centisText;
+  };
+
+  // Tur listesinin HTML'ini üretir; en son eklenen tur en üstte görünür.
+  const buildLapsHtml = () => {
+    let html = '';
+    for (let i = stopwatchLaps.length - 1; i >= 0; i--) {
+      const lap = stopwatchLaps[i];
+      const split = formatTime(lap.splitMs);
+      html +=
+        `<div class="stopwatch-lap-row">` +
+        `<span class="stopwatch-lap-index">Tur ${i + 1}</span>` +
+        `<span>${split.timeText}${split.centisText}</span>` +
+        `</div>`;
+    }
+    return html;
+  };
+
+  // Tam ekrandaki tur listesini ve ayrı "Turlarım" sayfasındaki listeyi günceller.
+  const renderLaps = () => {
+    const html = buildLapsHtml();
+    stopwatchLapsEl.innerHTML = html;
+    stopwatchLapsEl.classList.toggle('is-visible', stopwatchLaps.length > 0 && stopwatchControlsVisible);
+
+    lapsPageList.innerHTML = html.replace(/stopwatch-lap-row/g, 'laps-page-row')
+      .replace(/stopwatch-lap-index/g, 'laps-page-index');
+    lapsPageEmpty.style.display = stopwatchLaps.length > 0 ? 'none' : '';
+  };
+
+  // Tam ekranda boş alana dokununca Tur butonunu (ve varsa tur listesini) göster/gizle;
+  // belirdikten 3 saniye sonra kendiliğinden tekrar kaybolur.
+  let lapControlsTimer = null;
+
+  const toggleLapControls = () => {
+    stopwatchControlsVisible = !stopwatchControlsVisible;
+    stopwatchLapBtn.classList.toggle('is-visible', stopwatchControlsVisible);
+    renderLaps();
+
+    clearTimeout(lapControlsTimer);
+    if (stopwatchControlsVisible) {
+      lapControlsTimer = setTimeout(() => {
+        stopwatchControlsVisible = false;
+        stopwatchLapBtn.classList.remove('is-visible');
+        renderLaps();
+      }, 3000);
+    }
+  };
+
+  // "Turlarım" butonuna basınca kaydedilen turların listelendiği bağımsız
+  // sayfayı açar; geri butonu Sayfa 5'e döner (Takvim sayfasıyla aynı akış).
+  const openLapsPage = () => {
+    renderLaps();
+    document.body.classList.add('is-laps-open'); // nav bar'ı gizler
+    goToPage('page-7');
+  };
+
+  const closeLapsPage = () => {
+    document.body.classList.remove('is-laps-open');
+    goToPage('page-5');
+  };
+
+  // Tur butonuna basınca o ana kadarki süreyi tur olarak kaydeder.
+  const addLap = () => {
+    if (!swRunning) return;
+    const totalMs = currentElapsedMs();
+    const prevTotal = stopwatchLaps.length ? stopwatchLaps[stopwatchLaps.length - 1].totalMs : 0;
+    stopwatchLaps.push({ totalMs, splitMs: totalMs - prevTotal });
+    renderLaps();
   };
 
   const currentElapsedMs = () =>
@@ -3225,11 +3531,13 @@
     }
   };
 
-  // Sıfırla butonu yalnızca sayaç duraklatılmışken VE elde birikmiş bir
-  // süre varken görünür; süre 0'ken veya sayaç çalışırken tamamen gizli.
+  // Sıfırla ve Turlarım butonları yalnızca sayaç duraklatılmışken VE elde
+  // birikmiş bir süre varken görünür; süre 0'ken veya sayaç çalışırken
+  // ikisi de tamamen gizli (Turlarım gizlenince açık tur listesi de kapanır).
   const updateResetState = () => {
     const shouldShow = !swRunning && currentElapsedMs() > 0;
     stopwatchResetBtn.classList.toggle('is-hidden', !shouldShow);
+    stopwatchLapsBtn.classList.toggle('is-hidden', !shouldShow);
   };
 
   const startStopwatch = () => {
@@ -3242,6 +3550,13 @@
     if (swRafId) cancelAnimationFrame(swRafId);
     swRafId = requestAnimationFrame(stopwatchTick);
     updateResetState();
+
+    // Tam ekran her açıldığında alt başlık 3 saniye görünür kalır, sonra kaybolur.
+    stopwatchFullscreenHint.classList.remove('is-hidden');
+    clearTimeout(stopwatchHintTimer);
+    stopwatchHintTimer = setTimeout(() => {
+      stopwatchFullscreenHint.classList.add('is-hidden');
+    }, 3000);
   };
 
   const pauseStopwatch = () => {
@@ -3253,6 +3568,9 @@
     stopwatchDisplay.setAttribute('aria-label', 'Kronometreyi başlat');
     stopwatchHint.textContent = swAccumulatedMs > 0 ? 'Devam etmek için dokun' : 'Başlatmak için dokun';
     formatAndRenderTime(swAccumulatedMs);
+    stopwatchControlsVisible = false;
+    stopwatchLapBtn.classList.remove('is-visible');
+    clearTimeout(lapControlsTimer);
     updateResetState();
   };
 
@@ -3269,10 +3587,19 @@
     swAccumulatedMs = 0;
     formatAndRenderTime(0);
     stopwatchHint.textContent = 'Başlatmak için dokun';
+    stopwatchLaps = [];
+    stopwatchControlsVisible = false;
+    stopwatchLapBtn.classList.remove('is-visible');
+    clearTimeout(lapControlsTimer);
+    clearTimeout(stopwatchHintTimer);
+    stopwatchFullscreenHint.classList.remove('is-hidden');
+    renderLaps();
     updateResetState();
   };
 
   stopwatchResetBtn.addEventListener('click', resetStopwatch);
+  stopwatchLapsBtn.addEventListener('click', openLapsPage);
+  lapsBackBtn.addEventListener('click', closeLapsPage);
 
   // Kart, sayaç çalışırken tek dokunmayla duraklatma alanı görevi görür
   // (butonlar gizli olduğu için bu, çalışırken erişilebilir tek kontroldür).
@@ -3285,13 +3612,32 @@
     }
   });
 
-  // Tam ekran görünüm de aynı şekilde dokunmayla duraklatılır.
-  stopwatchFullscreen.addEventListener('click', toggleStopwatch);
-  stopwatchFullscreen.addEventListener('keydown', (e) => {
+  // Tam ekranda, sayının üzerine eklenen görünmez alana dokununca
+  // kronometre duraklar ve tam ekrandan çıkılır.
+  stopwatchExitZone.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleStopwatch();
+  });
+  stopwatchExitZone.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
+      e.stopPropagation();
       toggleStopwatch();
     }
+  });
+
+  // Tam ekranda boş bir alana (rakamın veya butonların dışına) dokununca
+  // Tur butonu belirir/gizlenir.
+  const stopwatchFullscreenCore = document.getElementById('stopwatchFullscreenCore');
+  stopwatchFullscreen.addEventListener('click', (e) => {
+    if (e.target !== stopwatchFullscreen && e.target !== stopwatchFullscreenCore) return;
+    toggleLapControls();
+  });
+
+  // Tur butonuna basınca o ana kadarki süre tur olarak eklenir.
+  stopwatchLapBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    addLap();
   });
 
   // Sayfa 1'deki butonla aynı "gerçek basılma" hissi: kart, dokunulduğu
@@ -3469,6 +3815,12 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && calendarPage.classList.contains('is-active')) {
       closeCalendarOverlay();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('page-7').classList.contains('is-active')) {
+      closeLapsPage();
     }
   });
 
