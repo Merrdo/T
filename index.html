@@ -308,6 +308,18 @@
     transform: translateX(9px);
   }
 
+  /* Tam ekran anahtarı: yalnızca Android cihazlarda gösterilir. JS,
+     sayfa yüklenirken user agent üzerinden Android tespiti yapıp
+     body'ye is-android sınıfını ekliyor; bu sınıf yoksa anahtar hiç
+     render edilmez (iOS, masaüstü, vb. cihazlarda tamamen gizli). */
+  .fullscreen-toggle {
+    display: none;
+  }
+
+  body.is-android .fullscreen-toggle {
+    display: inline-block;
+  }
+
   /* Anahtar aktif edildiğinde (checked) sayfadaki button_top butonları
      antresit (koyu gri) tonuna geçer — referans görseldeki takvim
      hücrelerinden ilham alındı. Alt katman (--button_outline_color)
@@ -2049,6 +2061,17 @@
           <span class="thumb"></span>
         </span>
       </label>
+
+      <!-- Tam ekran anahtarı: yalnızca Android cihazlarda görünür (JS ile
+           tespit edilip body'ye eklenen is-android sınıfı üzerinden
+           gösterilir/gizlenir). Açıldığında uygulama, bildirim çubuğu ve
+           gezinme çubuğu gizlenmiş şekilde tam ekran görünüme geçer. -->
+      <label class="toggle home-toggle fullscreen-toggle" id="fullscreenToggleLabel">
+        <input type="checkbox" id="fullscreenToggleInput" />
+        <span class="track">
+          <span class="thumb"></span>
+        </span>
+      </label>
     </div>
   </section>
 
@@ -2355,6 +2378,73 @@
     };
     homeToggleInput.addEventListener('change', syncAnthracite);
     syncAnthracite();
+  }
+</script>
+
+<script>
+  // ---------- Tam Ekran Anahtarı (yalnızca Android) ----------
+  // Anahtar yalnızca Android cihazlarda görünür; user agent üzerinden
+  // tespit edilir. Anahtar açıldığında uygulama, tarayıcının Fullscreen
+  // API'siyle (requestFullscreen) bildirim çubuğu ve gezinme çubuğu
+  // gizlenmiş şekilde tam ekrana geçer — herhangi bir izin isteği veya
+  // bildirim göstermeden. Tercih localStorage'da saklanır; bir sonraki
+  // ziyarette anahtar zaten açıksa, tarayıcı güvenliği gereği tam ekrana
+  // otomatik geçiş ancak kullanıcının sayfadaki ilk dokunuşuyla tetiklenebilir
+  // (bu yüzden ilk dokunuşta sessizce devreye girer, ayrıca bir buton veya
+  // bildirim göstermeden).
+  const isAndroidDevice = /Android/i.test(navigator.userAgent);
+  if (isAndroidDevice) {
+    document.body.classList.add('is-android');
+  }
+
+  const FULLSCREEN_PREF_KEY = 'takvimim-fullscreen-enabled';
+  const fullscreenToggleInput = document.getElementById('fullscreenToggleInput');
+
+  const enterFullscreen = () => {
+    const el = document.documentElement;
+    const request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+    if (!request) return;
+    try {
+      const result = request.call(el);
+      if (result && typeof result.catch === 'function') result.catch(() => {});
+    } catch (err) { /* Tam ekran desteklenmiyor veya izin verilmedi, sessizce yoksay */ }
+  };
+
+  const exitFullscreen = () => {
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+    const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
+    if (!isFullscreen || !exit) return;
+    try {
+      const result = exit.call(document);
+      if (result && typeof result.catch === 'function') result.catch(() => {});
+    } catch (err) { /* Sessizce yoksay */ }
+  };
+
+  if (isAndroidDevice && fullscreenToggleInput) {
+    // Kaydedilmiş tercihi anahtara yansıt.
+    const savedPref = localStorage.getItem(FULLSCREEN_PREF_KEY) === 'true';
+    fullscreenToggleInput.checked = savedPref;
+
+    fullscreenToggleInput.addEventListener('change', () => {
+      localStorage.setItem(FULLSCREEN_PREF_KEY, fullscreenToggleInput.checked ? 'true' : 'false');
+      if (fullscreenToggleInput.checked) {
+        enterFullscreen(); // Anahtara dokunuş zaten bir kullanıcı jesti, hemen tetiklenebilir.
+      } else {
+        exitFullscreen();
+      }
+    });
+
+    // Tercih daha önce açılmışsa, sayfadaki ilk dokunuşta (herhangi bir
+    // yere) sessizce tam ekrana geçilir — tarayıcılar requestFullscreen'i
+    // yalnızca bir kullanıcı jestinin içinde çalıştırmaya izin verdiği
+    // için otomatik/gecikmeli tetikleme mümkün değildir.
+    if (savedPref) {
+      const triggerOnce = () => {
+        enterFullscreen();
+        document.removeEventListener('pointerdown', triggerOnce);
+      };
+      document.addEventListener('pointerdown', triggerOnce, { once: true });
+    }
   }
 </script>
 
@@ -3454,28 +3544,40 @@
     stopwatchCentisFullEl.textContent = centisText;
   };
 
-  // Tur listesinin HTML'ini üretir; en son eklenen tur en üstte görünür.
+  // Tek bir tur satırının HTML'ini üretir.
+  const buildLapRowHtml = (lap, index) => {
+    const split = formatTime(lap.splitMs);
+    return (
+      `<div class="stopwatch-lap-row">` +
+      `<span class="stopwatch-lap-index">Tur ${index + 1}</span>` +
+      `<span>${split.timeText}${split.centisText}</span>` +
+      `</div>`
+    );
+  };
+
+  // "Turlarım" sayfasındaki tam listenin HTML'ini üretir; en son eklenen
+  // tur en üstte görünür. Buradaki tüm geçmiş turlar listelenmeye devam eder.
   const buildLapsHtml = () => {
     let html = '';
     for (let i = stopwatchLaps.length - 1; i >= 0; i--) {
-      const lap = stopwatchLaps[i];
-      const split = formatTime(lap.splitMs);
-      html +=
-        `<div class="stopwatch-lap-row">` +
-        `<span class="stopwatch-lap-index">Tur ${i + 1}</span>` +
-        `<span>${split.timeText}${split.centisText}</span>` +
-        `</div>`;
+      html += buildLapRowHtml(stopwatchLaps[i], i);
     }
     return html;
   };
 
   // Tam ekrandaki tur listesini ve ayrı "Turlarım" sayfasındaki listeyi günceller.
+  // Tam ekranda yalnızca EN SON eklenen tur gösterilir (diğer turlara
+  // "Turlarım" sayfasından bakılabilir); Turlarım sayfasında ise tüm
+  // turlar listelenmeye devam eder.
   const renderLaps = () => {
-    const html = buildLapsHtml();
-    stopwatchLapsEl.innerHTML = html;
+    const lastLapHtml = stopwatchLaps.length
+      ? buildLapRowHtml(stopwatchLaps[stopwatchLaps.length - 1], stopwatchLaps.length - 1)
+      : '';
+    stopwatchLapsEl.innerHTML = lastLapHtml;
     stopwatchLapsEl.classList.toggle('is-visible', stopwatchLaps.length > 0 && stopwatchControlsVisible);
 
-    lapsPageList.innerHTML = html.replace(/stopwatch-lap-row/g, 'laps-page-row')
+    const fullHtml = buildLapsHtml();
+    lapsPageList.innerHTML = fullHtml.replace(/stopwatch-lap-row/g, 'laps-page-row')
       .replace(/stopwatch-lap-index/g, 'laps-page-index');
     lapsPageEmpty.style.display = stopwatchLaps.length > 0 ? 'none' : '';
   };
