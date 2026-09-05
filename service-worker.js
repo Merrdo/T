@@ -1,8 +1,10 @@
 // Takvimim - Service Worker
 // Uygulamayı "Ana Ekrana Ekle" ile açıldığında çevrimdışı da çalışır hale
-// getirmek için temel bir cache-first stratejisi uygular.
+// getirmek için network-first (önce ağ, olmazsa önbellek) stratejisi uygular.
+// Böylece GitHub'a her yeni sürüm yüklendiğinde kullanıcı hep güncel içeriği görür;
+// internet yoksa en son önbelleklenen sürüm gösterilir.
 
-const CACHE_VERSION = 'takvimim-v1';
+const CACHE_VERSION = 'takvimim-v2'; // Her önemli güncellemede bu numarayı artırın (v3, v4, ...)
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -29,30 +31,29 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Cache-first: önce önbellekten sun, yoksa ağdan al ve önbelleğe ekle.
-// Google Fonts gibi harici istekler de fırsat buldukça önbelleklenir,
-// böylece çevrimdışıyken de son görülen yazı tipiyle açılır.
+// Network-first: önce ağdan al ve önbelleğe yaz; ağ başarısız olursa
+// (offline) önbellekten sun. Böylece siteye her girişte en güncel dosyalar
+// gösterilir, sadece internet yokken önbelleğe düşülür.
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
-          // Ağ da yoksa ve bu bir sayfa gezinmesiyse ana sayfaya düş.
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request).then((cached) => {
+          if (cached) return cached;
+          // Ağ da yok, önbellekte de yoksa ve bu bir sayfa gezinmesiyse ana sayfaya düş.
           if (event.request.mode === 'navigate') {
             return caches.match('./index.html');
           }
         });
-    })
+      })
   );
 });
