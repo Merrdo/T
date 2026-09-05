@@ -16,7 +16,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   * {
     margin: 0;
@@ -172,7 +172,7 @@
     position: absolute;
     top: 2px;
     left: 2px;
-    width: calc((340px - 8px) / 5);
+    width: calc((340px - 8px) / 6);
     height: 36px;
     background-color: var(--main-color);
     border-radius: 50px;
@@ -182,7 +182,7 @@
   }
 
   .option {
-    width: calc((340px - 8px) / 5);
+    width: calc((340px - 8px) / 6);
     height: 36px;
     position: relative;
     top: 2px;
@@ -2026,6 +2026,432 @@
     color: rgba(18, 18, 18, 0.45);
     padding: 0.5rem 0;
   }
+
+  /* ---------- Sekme 7: Ayarlar Sayfası ----------
+     Diğer büyük sayfalar (Sayfa 4, Sayfa 6) gibi üstte hizalı ve gerekirse
+     kaydırmalı. Kartlar Sayfa 6/7'deki beyaz brüt kart dilini (kalın siyah
+     çerçeve + katı gölge) birebir kullanır; bölüm başlıkları ise takvimin
+     gün başlığı etiketleriyle (calendar-weekday) aynı ufak, büyük harfli
+     Archivo Expanded motifini tekrarlar — uygulamanın kendi imzasını
+     ödünç alır. */
+  #page-settings {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: calc(48px + env(safe-area-inset-top));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .settings-hero {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .settings-hero-icon {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: 3px solid #000;
+    border-radius: 50%;
+    box-shadow: 3px 3px 0px 0px #000;
+    color: #121212;
+  }
+
+  .settings-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 1.55rem;
+    color: var(--theme-text, #f2f2f7);
+    transition: color 0.5s ease;
+  }
+
+  .settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .settings-section-label {
+    font-family: "Archivo Expanded", "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--theme-text, #f2f2f7);
+    opacity: 0.6;
+    transition: color 0.5s ease;
+    padding-left: 0.3rem;
+  }
+
+  .settings-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 1.1em;
+    box-shadow: 6px 6px 0px 0px #000;
+    padding: 0.95rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+    padding: 0.65rem 0;
+  }
+
+  .settings-row-column {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+
+  .settings-divider {
+    height: 2px;
+    background: rgba(18, 18, 18, 0.1);
+    margin: 0.15rem 0;
+  }
+
+  .settings-row-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .settings-row-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #121212;
+  }
+
+  .settings-row-desc {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: rgba(18, 18, 18, 0.55);
+    line-height: 1.35;
+  }
+
+  /* Karanlık mod anahtarı: Sayfa 1'deki .home-toggle ile birebir aynı
+     görünüm (.toggle .track .thumb sınıfları paylaşılıyor), böylece iki
+     anahtar da aynı switch'in iki yüzü gibi hissettiriyor. */
+  .settings-toggle {
+    flex-shrink: 0;
+  }
+
+  /* ---------- Tema seçici: 4 renk topu, brüt çerçeveli ---------- */
+  .settings-theme-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .settings-theme-swatch {
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 3px solid #000;
+    box-shadow: 2px 2px 0px 0px #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
+  }
+
+  .settings-theme-swatch:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px 0px #000;
+  }
+
+  .settings-theme-swatch:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px 0px #000;
+  }
+
+  .settings-theme-swatch-check {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--settings-swatch-check-color, #000);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .settings-theme-swatch.is-selected {
+    transform: scale(1.08);
+  }
+
+  .settings-theme-swatch.is-selected .settings-theme-swatch-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ---------- Hafta başlangıcı: kayan siyah pil ile segmented control ----------
+     Alt nav bar'daki (.nav-slider) mantığın birebir aynısı: seçili
+     seçeneğin arkasında yumuşakça kayan siyah bir alan durur. */
+  .settings-segmented {
+    position: relative;
+    display: flex;
+    background: #f2f2f2;
+    border: 3px solid #000;
+    border-radius: 0.85rem;
+    padding: 3px;
+    height: 42px;
+  }
+
+  .settings-segmented-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    height: calc(100% - 6px);
+    background: #000;
+    border-radius: 0.65rem;
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+  }
+
+  .settings-segmented-option {
+    position: relative;
+    flex: 1;
+    z-index: 1;
+    border: none;
+    background: transparent;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #121212;
+    cursor: pointer;
+    border-radius: 0.65rem;
+    transition: color 0.25s ease;
+  }
+
+  .settings-segmented-option.is-active {
+    color: #fff;
+  }
+
+  /* ---------- Verileri sıfırlama butonu ---------- */
+  .settings-danger-btn {
+    flex-shrink: 0;
+    padding: 0.6rem 1rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #121212;
+    background-color: #fff;
+    border: 3px solid #000;
+    border-radius: 0.8rem;
+    box-shadow: 3px 3px 0px 0px #000;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .settings-danger-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px 0px #000;
+    background-color: #ff5c5c;
+  }
+
+  .settings-danger-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px 0px #000;
+    background-color: #ff5c5c;
+  }
+
+  .settings-footer {
+    text-align: center;
+    padding: 0.4rem 0 0.2rem;
+  }
+
+  .settings-footer-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--theme-text, #f2f2f7);
+    opacity: 0.5;
+    transition: color 0.5s ease;
+  }
+
+  /* ---------- Sıfırlama onay pop-up'ı (wheel-color-backdrop ile aynı dil) ---------- */
+  .settings-confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(18, 18, 28, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .settings-confirm-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .settings-confirm-card {
+    width: 100%;
+    max-width: 300px;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 1.1em;
+    box-shadow: 6px 6px 0px 0px #000;
+    padding: 1.3rem 1.2rem;
+    text-align: center;
+    transform: translateY(14px) scale(0.96);
+    opacity: 0;
+    transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease;
+  }
+
+  .settings-confirm-backdrop.is-open .settings-confirm-card {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .settings-confirm-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #121212;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  .settings-confirm-desc {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: rgba(18, 18, 18, 0.6);
+    line-height: 1.4;
+    display: block;
+    margin-bottom: 1.1rem;
+  }
+
+  .settings-confirm-actions {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .settings-confirm-actions button {
+    flex: 1;
+    padding: 0.65rem 0.5rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.88rem;
+    border: 3px solid #000;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px 0px #000;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .settings-confirm-cancel {
+    background: #fff;
+    color: #121212;
+  }
+
+  .settings-confirm-cancel:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px 0px #000;
+  }
+
+  .settings-confirm-cancel:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px 0px #000;
+  }
+
+  .settings-confirm-confirm {
+    background: #ff5c5c;
+    color: #fff;
+  }
+
+  .settings-confirm-confirm:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px 0px #000;
+  }
+
+  .settings-confirm-confirm:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px 0px #000;
+  }
+
+  /* ---------- Anahtar aktifken (karanlık mod) Ayarlar sayfasının beyaz
+     yüzeyleri de diğer sayfalardaki gibi antresit tona geçer. ---------- */
+  body.is-anthracite .settings-card,
+  body.is-anthracite .settings-hero-icon {
+    background-color: #3b3e42;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .settings-row-title {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .settings-row-desc {
+    color: rgba(242, 242, 244, 0.55);
+  }
+
+  body.is-anthracite .settings-divider {
+    background: rgba(242, 242, 244, 0.15);
+  }
+
+  body.is-anthracite .settings-segmented {
+    background: rgba(242, 242, 244, 0.18);
+  }
+
+  body.is-anthracite .settings-segmented-option {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .settings-danger-btn {
+    background-color: #3b3e42;
+    border-color: #000;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .settings-confirm-card {
+    background: #3b3e42;
+  }
+
+  body.is-anthracite .settings-confirm-title,
+  body.is-anthracite .settings-confirm-desc {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .settings-confirm-desc {
+    color: rgba(242, 242, 244, 0.6);
+  }
+
+  body.is-anthracite .settings-confirm-cancel {
+    background: #3b3e42;
+    color: #f2f2f4;
+  }
 </style>
 </head>
 <body oncopy="return false" oncut="return false" onselectstart="return false" ondragstart="return false">
@@ -2041,14 +2467,6 @@
       <button>
         <span class="button_top"> Button </span>
       </button>
-
-      <!-- From Uiverse.io by corentinchene -->
-      <label class="toggle home-toggle">
-        <input type="checkbox" />
-        <span class="track">
-          <span class="thumb"></span>
-        </span>
-      </label>
     </div>
   </section>
 
@@ -2254,6 +2672,90 @@
     </div>
   </section>
 
+  <!-- Sekme 7: Ayarlar sayfası -->
+  <section class="page" id="page-settings">
+    <div class="settings-page">
+      <div class="settings-hero">
+        <span class="settings-hero-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/>
+          </svg>
+        </span>
+        <h1 class="settings-title">Ayarlar</h1>
+      </div>
+
+      <div class="settings-section">
+        <span class="settings-section-label">Görünüm</span>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-row-text">
+              <span class="settings-row-title">Karanlık mod</span>
+              <span class="settings-row-desc">Kartlar ve butonlar antresit tona döner</span>
+            </div>
+            <!-- From Uiverse.io by corentinchene (Sayfa 1'deki anahtarla aynı) -->
+            <label class="toggle home-toggle settings-toggle" id="settingsDarkToggleWrap">
+              <input type="checkbox" id="settingsDarkToggle" />
+              <span class="track">
+                <span class="thumb"></span>
+              </span>
+            </label>
+          </div>
+
+          <div class="settings-divider"></div>
+
+          <div class="settings-row settings-row-column">
+            <span class="settings-row-title">Renk teması</span>
+            <div class="settings-theme-picker" id="settingsThemePicker"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <span class="settings-section-label">Takvim</span>
+        <div class="settings-card">
+          <div class="settings-row settings-row-column">
+            <span class="settings-row-title">Hafta başlangıcı</span>
+            <div class="settings-segmented" id="weekStartSegmented">
+              <div class="settings-segmented-slider" id="weekStartSlider"></div>
+              <button type="button" class="settings-segmented-option is-active" data-value="mon">Pazartesi</button>
+              <button type="button" class="settings-segmented-option" data-value="sun">Pazar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <span class="settings-section-label">Veri</span>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-row-text">
+              <span class="settings-row-title">Tüm verileri sıfırla</span>
+              <span class="settings-row-desc">Görevler, tema ve kayıtlar silinir</span>
+            </div>
+            <button type="button" class="settings-danger-btn" id="settingsResetBtn">Sıfırla</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-footer">
+        <span class="settings-footer-text">Takvimim · v1.0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ayarlar: verileri sıfırlama onay pop-up'ı -->
+  <div class="settings-confirm-backdrop" id="settingsConfirmBackdrop">
+    <div class="settings-confirm-card">
+      <span class="settings-confirm-title">Emin misin?</span>
+      <span class="settings-confirm-desc">Görevler, seçili tema, çark seçenekleri ve kronometre kayıtları kalıcı olarak silinecek.</span>
+      <div class="settings-confirm-actions">
+        <button type="button" class="settings-confirm-cancel" id="settingsConfirmCancel">Vazgeç</button>
+        <button type="button" class="settings-confirm-confirm" id="settingsConfirmConfirm">Evet, sıfırla</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- Sayfa 4: seçenek rengini değiştirmek için açılan pop-up. -->
@@ -2276,23 +2778,27 @@
     <div class="nav-slider"></div>
     <div class="option">
       <input class="nav-input" type="radio" name="nav" value="page-1" checked>
-      <div class="nav-btn"><span class="nav-span">Sayfa 1</span></div>
+      <div class="nav-btn"><span class="nav-span">1</span></div>
     </div>
     <div class="option">
       <input class="nav-input" type="radio" name="nav" value="page-2">
-      <div class="nav-btn"><span class="nav-span">Sayfa 2</span></div>
+      <div class="nav-btn"><span class="nav-span">2</span></div>
     </div>
     <div class="option">
       <input class="nav-input" type="radio" name="nav" value="page-3">
-      <div class="nav-btn"><span class="nav-span">Sayfa 3</span></div>
+      <div class="nav-btn"><span class="nav-span">3</span></div>
     </div>
     <div class="option">
       <input class="nav-input" type="radio" name="nav" value="page-4">
-      <div class="nav-btn"><span class="nav-span">Sayfa 4</span></div>
+      <div class="nav-btn"><span class="nav-span">4</span></div>
     </div>
     <div class="option">
       <input class="nav-input" type="radio" name="nav" value="page-5">
-      <div class="nav-btn"><span class="nav-span">Sayfa 5</span></div>
+      <div class="nav-btn"><span class="nav-span">5</span></div>
+    </div>
+    <div class="option">
+      <input class="nav-input" type="radio" name="nav" value="page-settings">
+      <div class="nav-btn"><span class="nav-span">7</span></div>
     </div>
   </div>
 </nav>
@@ -2346,24 +2852,13 @@
 </script>
 
 <script>
-  // Ana sayfadaki anahtar aktif edildiğinde button_top butonları antresit
-  // tonuna geçer (body.is-anthracite class'ı üzerinden CSS tetiklenir).
-  const homeToggleInput = document.querySelector('.home-toggle input');
-  if (homeToggleInput) {
-    const syncAnthracite = () => {
-      document.body.classList.toggle('is-anthracite', homeToggleInput.checked);
-    };
-    homeToggleInput.addEventListener('change', syncAnthracite);
-    syncAnthracite();
-  }
-</script>
-
-<script>
   // ---------- Yerel Depolama (localStorage) ----------
-  // Uygulamanın tüm verileri (görevler, tema, çark seçenekleri, kronometre)
-  // burada tanımlanan tek bir anahtar altında localStorage'a yazılır.
-  // Böylece sayfa yenilense, sekme kapansa veya uygulama tamamen kapatılıp
-  // yeniden açılsa bile kullanıcı verileri kaybolmaz.
+  // Uygulamanın tüm verileri (görevler, tema, çark seçenekleri, kronometre,
+  // koyu mod anahtarı) burada tanımlanan tek bir anahtar altında
+  // localStorage'a yazılır. Böylece sayfa yenilense, sekme kapansa veya
+  // uygulama tamamen kapatılıp yeniden açılsa bile kullanıcı verileri
+  // kaybolmaz. Bu script, ona ihtiyaç duyan diğer script'lerden (tema,
+  // anahtar vb.) önce çalışması için burada, dosyanın başında tanımlanır.
   const APP_STORAGE_KEY = 'takvimim_app_state_v1';
 
   const loadAppState = () => {
@@ -2388,6 +2883,34 @@
       console.warn('Uygulama verisi kaydedilemedi:', err);
     }
   };
+</script>
+
+<script>
+  // Karanlık mod anahtarı artık yalnızca Ayarlar sayfasında yaşıyor.
+  // Aktif edildiğinde button_top butonları antresit (koyu mod) tonuna
+  // geçer (body.is-anthracite class'ı üzerinden CSS tetiklenir). Anahtarın
+  // durumu (açık/kapalı) APP_STATE üzerinden localStorage'a kaydedilir;
+  // böylece en son açık bırakıldıysa bir sonraki girişte de anahtar açık
+  // olarak yüklenir. (Not: bu script, id="settingsDarkToggle" elemanından
+  // önce çalışır; ama olay dinleyicisi ekleme işlemi DOM elemanı bulununca
+  // yapıldığı için sıra sorun teşkil etmez — element sayfa HTML'inde bu
+  // script'ten önce zaten mevcut.)
+  const homeToggleInput = document.getElementById('settingsDarkToggle');
+  if (homeToggleInput) {
+    // Sayfa açılırken daha önce kaydedilmiş bir durum varsa uygula.
+    if (typeof APP_STATE.anthracite === 'boolean') {
+      homeToggleInput.checked = APP_STATE.anthracite;
+    }
+
+    const syncAnthracite = () => {
+      document.body.classList.toggle('is-anthracite', homeToggleInput.checked);
+    };
+    homeToggleInput.addEventListener('change', () => {
+      syncAnthracite();
+      saveAppState({ anthracite: homeToggleInput.checked });
+    });
+    syncAnthracite();
+  }
 </script>
 
 <script>
@@ -2734,7 +3257,11 @@
   const selectTheme = (index) => {
     if (index === selectedSwatchIndex) return;
     applyTheme(index);
-    syncSwatchSelection(index);
+    // window.syncSwatchSelection üzerinden çağırıyoruz (yerel syncSwatchSelection
+    // yerine): Ayarlar sayfası scripti bu fonksiyonu sarmalayıp kendi renk
+    // toplarını da güncelliyor. Doğrudan yerel referansı çağırırsak o sarmalama
+    // atlanır ve Ayarlar'daki tik işareti tema seçilirken anında görünmez.
+    window.syncSwatchSelection(index);
   };
 </script>
 
@@ -3878,10 +4405,17 @@
     'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
     'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
   ];
-  const CALENDAR_WEEKDAYS_SHORT = ['Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct', 'Pz']; // Pazartesi başlangıçlı
+  // Pazar başlangıçlı (JS Date.getDay() sırasıyla) kanonik kısa/uzun
+  // etiketler; başlangıç günü Ayarlar sayfasından değiştirilebildiği için
+  // gösterim sırası bu kanonik diziden her seferinde yeniden hesaplanır.
+  const CALENDAR_WEEKDAYS_SHORT_DOW = ['Pz', 'Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct'];
   const CALENDAR_WEEKDAYS_LONG = [
     'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'
   ];
+
+  // Ayarlar sayfasındaki "Hafta başlangıcı" seçimi: 1 = Pazartesi (varsayılan),
+  // 0 = Pazar. Daha önce kaydedilmişse localStorage'dan geri yüklenir.
+  let calendarWeekStart = APP_STATE.weekStart === 'sun' ? 0 : 1;
 
   const calendarToday = new Date();
   calendarToday.setHours(0, 0, 0, 0);
@@ -3890,13 +4424,22 @@
   let calendarViewMonth = calendarToday.getMonth();
   let calendarSelectedDate = new Date(calendarToday);
 
-  CALENDAR_WEEKDAYS_SHORT.forEach((label, index) => {
-    const el = document.createElement('span');
-    el.className = 'calendar-weekday';
-    if (index === 5 || index === 6) el.classList.add('is-weekend'); // Cumartesi & Pazar
-    el.textContent = label;
-    calendarWeekdaysEl.appendChild(el);
-  });
+  // Gün başlığı satırını (Pt/Sa/Ça...) o anki hafta başlangıcına göre
+  // baştan çizer; Ayarlar sayfasından hafta başlangıcı değişince tekrar
+  // çağrılır.
+  const renderCalendarWeekdaysHeader = () => {
+    calendarWeekdaysEl.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const dow = (calendarWeekStart + i) % 7; // 0 = Pazar ... 6 = Cumartesi
+      const el = document.createElement('span');
+      el.className = 'calendar-weekday';
+      if (dow === 0 || dow === 6) el.classList.add('is-weekend');
+      el.textContent = CALENDAR_WEEKDAYS_SHORT_DOW[dow];
+      calendarWeekdaysEl.appendChild(el);
+    }
+  };
+
+  renderCalendarWeekdaysHeader();
 
   const isSameCalendarDate = (a, b) =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -3907,7 +4450,7 @@
 
     const firstOfMonth = new Date(calendarViewYear, calendarViewMonth, 1);
     const jsWeekday = firstOfMonth.getDay(); // 0 = Pazar ... 6 = Cumartesi
-    const leadingBlank = (jsWeekday + 6) % 7; // Pazartesi = 0 olacak şekilde kaydır
+    const leadingBlank = (jsWeekday - calendarWeekStart + 7) % 7; // seçili başlangıç güne göre kaydır
 
     const daysInMonth = new Date(calendarViewYear, calendarViewMonth + 1, 0).getDate();
     const daysInPrevMonth = new Date(calendarViewYear, calendarViewMonth, 0).getDate();
@@ -3933,7 +4476,8 @@
       }
 
       const columnIndex = i % 7;
-      if (columnIndex === 5 || columnIndex === 6) cell.classList.add('is-weekend'); // Cumartesi & Pazar
+      const columnDow = (columnIndex + calendarWeekStart) % 7; // sütunun gerçek haftanın günü karşılığı
+      if (columnDow === 0 || columnDow === 6) cell.classList.add('is-weekend'); // Cumartesi & Pazar
 
       cell.textContent = cellDate.getDate();
       if (isSameCalendarDate(cellDate, calendarToday)) cell.classList.add('is-today');
@@ -4010,6 +4554,119 @@
 
   renderCalendarGrid();
   updateCalendarSelectedInfo();
+</script>
+
+<script>
+  // ---------- Sekme 7: Ayarlar Sayfası ----------
+  // Bu script diğer tüm sayfa script'lerinden sonra çalışır; bu yüzden
+  // APP_STATE, saveAppState, themes, selectTheme, syncSwatchSelection,
+  // calendarWeekStart, renderCalendarWeekdaysHeader ve renderCalendarGrid
+  // gibi daha önce tanımlanmış değişken/fonksiyonlara doğrudan (aynı
+  // script scope'unu paylaştıkları için) erişebilir.
+
+  // ---- Renk teması seçici: 4 renk topu, Sayfa 3'teki paletle aynı kaynak ----
+  const settingsThemePicker = document.getElementById('settingsThemePicker');
+  let settingsThemeSwatches = [];
+
+  if (settingsThemePicker) {
+    themes.forEach((theme, i) => {
+      const swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.className = 'settings-theme-swatch' + (i === themeIndex ? ' is-selected' : '');
+      swatch.style.background = theme.gradient;
+      swatch.style.setProperty('--settings-swatch-check-color', getCheckColorForGradient(theme.gradient));
+      swatch.setAttribute('aria-label', theme.name + ' temasını seç');
+
+      const check = document.createElement('span');
+      check.className = 'settings-theme-swatch-check';
+      check.textContent = '✓';
+      swatch.appendChild(check);
+
+      swatch.addEventListener('click', () => selectTheme(i));
+
+      settingsThemePicker.appendChild(swatch);
+      settingsThemeSwatches.push(swatch);
+    });
+  }
+
+  const syncSettingsThemeSwatches = (index) => {
+    settingsThemeSwatches.forEach((swatch, i) => {
+      swatch.classList.toggle('is-selected', i === index);
+    });
+  };
+
+  // Sayfa 1'in butonu veya Sayfa 3'ün paleti temayı değiştirdiğinde bu
+  // sayfadaki toplar da güncellensin diye syncSwatchSelection'ı sarmalıyoruz
+  // (aynı Sayfa 3'ün Sayfa 1'e bağlanma yöntemiyle).
+  const settingsPrevSyncSwatchSelection = window.syncSwatchSelection;
+  window.syncSwatchSelection = (index) => {
+    if (typeof settingsPrevSyncSwatchSelection === 'function') settingsPrevSyncSwatchSelection(index);
+    syncSettingsThemeSwatches(index);
+  };
+
+  // ---- Hafta başlangıcı: kayan siyah pil ile segmented control ----
+  const weekStartSegmented = document.getElementById('weekStartSegmented');
+  const weekStartSlider = document.getElementById('weekStartSlider');
+  const weekStartOptions = weekStartSegmented
+    ? Array.from(weekStartSegmented.querySelectorAll('.settings-segmented-option'))
+    : [];
+
+  const setWeekStartSlider = (value) => {
+    if (!weekStartSlider) return;
+    weekStartSlider.style.transform = value === 'sun' ? 'translateX(100%)' : 'translateX(0)';
+  };
+
+  const applyWeekStart = (value, { persist } = { persist: true }) => {
+    calendarWeekStart = value === 'sun' ? 0 : 1;
+    weekStartOptions.forEach((btn) => btn.classList.toggle('is-active', btn.dataset.value === value));
+    setWeekStartSlider(value);
+    renderCalendarWeekdaysHeader();
+    renderCalendarGrid();
+    if (persist) saveAppState({ weekStart: value });
+  };
+
+  weekStartOptions.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('is-active')) return;
+      applyWeekStart(btn.dataset.value);
+    });
+  });
+
+  // Sayfa yüklenirken kaydedilmiş tercihi (varsa) arayüze de yansıt.
+  applyWeekStart(APP_STATE.weekStart === 'sun' ? 'sun' : 'mon', { persist: false });
+
+  // ---- Tüm verileri sıfırlama: brüt stilde onay pop-up'ı ----
+  const settingsResetBtn = document.getElementById('settingsResetBtn');
+  const settingsConfirmBackdrop = document.getElementById('settingsConfirmBackdrop');
+  const settingsConfirmCancel = document.getElementById('settingsConfirmCancel');
+  const settingsConfirmConfirm = document.getElementById('settingsConfirmConfirm');
+
+  const openSettingsConfirm = () => settingsConfirmBackdrop.classList.add('is-open');
+  const closeSettingsConfirm = () => settingsConfirmBackdrop.classList.remove('is-open');
+
+  if (settingsResetBtn) settingsResetBtn.addEventListener('click', openSettingsConfirm);
+  if (settingsConfirmCancel) settingsConfirmCancel.addEventListener('click', closeSettingsConfirm);
+  if (settingsConfirmBackdrop) {
+    settingsConfirmBackdrop.addEventListener('click', (e) => {
+      if (e.target === settingsConfirmBackdrop) closeSettingsConfirm();
+    });
+  }
+  if (settingsConfirmConfirm) {
+    settingsConfirmConfirm.addEventListener('click', () => {
+      try {
+        localStorage.removeItem(APP_STORAGE_KEY);
+      } catch (err) {
+        console.warn('Uygulama verisi silinemedi:', err);
+      }
+      location.reload();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && settingsConfirmBackdrop && settingsConfirmBackdrop.classList.contains('is-open')) {
+      closeSettingsConfirm();
+    }
+  });
 </script>
 
 <script>
