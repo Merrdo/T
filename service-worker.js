@@ -5,7 +5,7 @@
 
 // Sürüm numarasını her önemli güncellemede artır (örn: 'v4', 'v5'...).
 // Bu, eski önbelleğin temizlenip yeni dosyaların indirilmesini sağlar.
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const CACHE_NAME = 'takvimim-' + CACHE_VERSION;
 
 // Uygulama kabuğu: ilk yüklemede önbelleğe alınacak dosyalar.
