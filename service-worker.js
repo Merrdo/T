@@ -4,7 +4,7 @@
 // Böylece GitHub'a her yeni sürüm yüklendiğinde kullanıcı hep güncel içeriği görür;
 // internet yoksa en son önbelleklenen sürüm gösterilir.
 
-const CACHE_VERSION = 'takvimim-v3'; // Her önemli güncellemede bu numarayı artırın (v3, v4, ...)
+const CACHE_VERSION = 'takvimim-v3'; // Her önemli güncellemede bu numarayı artırın (v4, v5, ...)
 const CORE_ASSETS = [
   './',
   './index.html',

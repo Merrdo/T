@@ -55,6 +55,8 @@
 
   html {
     -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+    height: 100%;
   }
 
   button, a, * {
@@ -72,6 +74,9 @@
   body {
     background: #2b2f4a;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
   }
 
   /* ---------- Tema Katmanları ---------- */
@@ -94,9 +99,11 @@
 
   .app {
     position: relative;
+    width: 100%;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   .page {
@@ -2373,9 +2380,13 @@
   // tonuna geçer (body.is-anthracite class'ı üzerinden CSS tetiklenir).
   const homeToggleInput = document.querySelector('.home-toggle input');
   if (homeToggleInput) {
+    const ANTHRACITE_PREF_KEY = 'takvimim-anthracite-enabled';
     const syncAnthracite = () => {
       document.body.classList.toggle('is-anthracite', homeToggleInput.checked);
+      localStorage.setItem(ANTHRACITE_PREF_KEY, homeToggleInput.checked ? 'true' : 'false');
     };
+    // Kaydedilmiş tercihi anahtara yansıt (sayfa yeniden açıldığında kalıcı olsun).
+    homeToggleInput.checked = localStorage.getItem(ANTHRACITE_PREF_KEY) === 'true';
     homeToggleInput.addEventListener('change', syncAnthracite);
     syncAnthracite();
   }
@@ -2800,6 +2811,74 @@
   const taskScroll = document.getElementById('taskScroll');
   const taskDateEl = document.getElementById('taskDate');
 
+  // ---------- Görevlerin yerel depolanması ----------
+  // Görev listesi (metin + işaretli durumu) her değişiklikte localStorage'a
+  // yazılır; sayfa yeniden açıldığında (veya tarayıcı kapatılıp tekrar
+  // açıldığında) kaydedilen görevler geri yüklenir.
+  const TASKS_STORAGE_KEY = 'takvimim-tasks';
+
+  const saveTasks = () => {
+    const tasks = Array.from(taskList.querySelectorAll('.brutal-radio-label')).map((label) => {
+      const textEl = label.querySelector('.brutal-radio-text, .brutal-task-input');
+      return {
+        text: textEl ? textEl.textContent || textEl.value || '' : '',
+        checked: !!label.querySelector('.brutal-radio')?.checked
+      };
+    }).filter((t) => t.text.trim() !== '');
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+  };
+
+  // Kayıtlı bir görev satırının DOM elemanını üretir (addTask'taki yeni
+  // satır yapısıyla birebir aynı, ama giriş kutusu yerine düz metin span'ı
+  // ve kaydedilmiş işaretli durumuyla).
+  const buildTaskLabel = (task) => {
+    const label = document.createElement('label');
+    label.className = 'brutal-radio-label';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'brutal-radio';
+    checkbox.checked = !!task.checked;
+
+    const custom = document.createElement('span');
+    custom.className = 'brutal-radio-custom';
+
+    const span = document.createElement('span');
+    span.className = 'brutal-radio-text';
+    span.textContent = task.text;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.setAttribute('aria-label', 'Görevi sil');
+    deleteBtn.textContent = '×';
+
+    label.appendChild(checkbox);
+    label.appendChild(custom);
+    label.appendChild(span);
+    label.appendChild(deleteBtn);
+    return label;
+  };
+
+  // Sayfa açılışında kayıtlı görevleri geri yükler. Daha önce hiç
+  // kaydedilmiş görev yoksa (ilk açılış), HTML'deki örnek görevler
+  // olduğu gibi kalır.
+  const loadTasks = () => {
+    const raw = localStorage.getItem(TASKS_STORAGE_KEY);
+    if (raw === null) return; // Hiç kayıt yok, örnek görevleri koru.
+    let tasks;
+    try {
+      tasks = JSON.parse(raw);
+    } catch (err) {
+      return;
+    }
+    if (!Array.isArray(tasks)) return;
+    taskList.innerHTML = '';
+    tasks.forEach((task) => taskList.appendChild(buildTaskLabel(task)));
+  };
+
+  loadTasks();
+
   // Sayfa 2 başlığındaki tarih: Türkiye'ye göre yazım biçimiyle (gün, ay adı, yıl, gün adı).
   if (taskDateEl) {
     const bugun = new Date();
@@ -2908,6 +2987,7 @@
 
     label.addEventListener('transitionend', () => {
       label.remove();
+      saveTasks();
     }, { once: true });
   };
 
@@ -2930,6 +3010,7 @@
     span.className = 'brutal-radio-text';
     span.textContent = value;
     input.replaceWith(span);
+    saveTasks();
   };
 
   // Satırın sağındaki çarpı butonuna tıklanınca görevi siler.
@@ -2941,6 +3022,13 @@
     e.preventDefault();
     e.stopPropagation();
     removeTask(deleteBtn.closest('.brutal-radio-label'));
+  });
+
+  // Bir görev işaretlenip/işareti kaldırılınca da kaydet.
+  taskList.addEventListener('change', (e) => {
+    if (e.target.classList.contains('brutal-radio')) {
+      saveTasks();
+    }
   });
 
   // Bir görev metnini (span) yerinde düzenlenebilir bir yazı alanına çevirir.
@@ -3515,10 +3603,54 @@
 
   let swAccumulatedMs = 0; // Duraklatılana kadar biriken süre
   let swStartedAt = 0;     // Son "başlat"ın performance.now() zamanı
+  let swStartedAtEpoch = 0; // Son "başlat"ın Date.now() zamanı (localStorage kalıcılığı için)
   let swRunning = false;
   let swRafId = null;
   let stopwatchLaps = [];                // Kaydedilen turlar: { totalMs, splitMs }
   let stopwatchControlsVisible = false;  // Tam ekranda boş alana dokununca Tur butonu görünür mü?
+
+  // ---------- Kronometrenin yerel depolanması ----------
+  // performance.now() sayfa yenilenince sıfırlandığı için, çalışırkenki
+  // referans noktası ayrıca Date.now() (epoch) ile de saklanır. Böylece
+  // sayfa kapatılıp tekrar açıldığında (veya saatler sonra dönüldüğünde)
+  // kronometre gerçek geçen süreye göre kaldığı yerden devam eder.
+  const STOPWATCH_STORAGE_KEY = 'takvimim-stopwatch';
+
+  const saveStopwatchState = () => {
+    localStorage.setItem(STOPWATCH_STORAGE_KEY, JSON.stringify({
+      swAccumulatedMs,
+      swRunning,
+      swStartedAtEpoch,
+      stopwatchLaps
+    }));
+  };
+
+  const loadStopwatchState = () => {
+    const raw = localStorage.getItem(STOPWATCH_STORAGE_KEY);
+    if (!raw) return;
+    let state;
+    try {
+      state = JSON.parse(raw);
+    } catch (err) {
+      return;
+    }
+    if (!state || typeof state !== 'object') return;
+
+    stopwatchLaps = Array.isArray(state.stopwatchLaps) ? state.stopwatchLaps : [];
+
+    if (state.swRunning && state.swStartedAtEpoch) {
+      // Kaldığı yerden, geçen gerçek süreyi hesaba katarak devam ettir.
+      const elapsedSinceClose = Date.now() - state.swStartedAtEpoch;
+      swAccumulatedMs = (state.swAccumulatedMs || 0) + Math.max(0, elapsedSinceClose);
+      startStopwatchFromSavedState();
+    } else {
+      swAccumulatedMs = state.swAccumulatedMs || 0;
+      formatAndRenderTime(swAccumulatedMs);
+      stopwatchHint.textContent = swAccumulatedMs > 0 ? 'Devam etmek için dokun' : 'Başlatmak için dokun';
+    }
+    renderLaps();
+    updateResetState();
+  };
 
   const pad2 = (n) => String(n).padStart(2, '0');
 
@@ -3621,6 +3753,7 @@
     const prevTotal = stopwatchLaps.length ? stopwatchLaps[stopwatchLaps.length - 1].totalMs : 0;
     stopwatchLaps.push({ totalMs, splitMs: totalMs - prevTotal });
     renderLaps();
+    saveStopwatchState();
   };
 
   const currentElapsedMs = () =>
@@ -3646,12 +3779,14 @@
     if (swRunning) return;
     swRunning = true;
     swStartedAt = performance.now();
+    swStartedAtEpoch = Date.now();
     document.body.classList.add('is-stopwatch-running');
     stopwatchDisplay.setAttribute('aria-label', 'Kronometreyi duraklat');
     stopwatchHint.textContent = 'Duraklatmak için dokun';
     if (swRafId) cancelAnimationFrame(swRafId);
     swRafId = requestAnimationFrame(stopwatchTick);
     updateResetState();
+    saveStopwatchState();
 
     // Tam ekran her açıldığında alt başlık 3 saniye görünür kalır, sonra kaybolur.
     stopwatchFullscreenHint.classList.remove('is-hidden');
@@ -3659,6 +3794,23 @@
     stopwatchHintTimer = setTimeout(() => {
       stopwatchFullscreenHint.classList.add('is-hidden');
     }, 3000);
+  };
+
+  // Sayfa açılışında, daha önce çalışır durumda bırakılmış bir kronometreyi
+  // (biriken süre zaten hesaplanmış haliyle) kaldığı yerden devam ettirir.
+  // startStopwatch ile aynı işi yapar, tek fark tam ekranı otomatik açması
+  // (kullanıcı sayfayı açtığında kronometre zaten çalışıyor olmalı).
+  const startStopwatchFromSavedState = () => {
+    swRunning = true;
+    swStartedAt = performance.now();
+    swStartedAtEpoch = Date.now();
+    document.body.classList.add('is-stopwatch-running');
+    stopwatchDisplay.setAttribute('aria-label', 'Kronometreyi duraklat');
+    stopwatchHint.textContent = 'Duraklatmak için dokun';
+    if (swRafId) cancelAnimationFrame(swRafId);
+    swRafId = requestAnimationFrame(stopwatchTick);
+    stopwatchFullscreenHint.classList.add('is-hidden'); // Sayfa yeni açıldı, ipucu tekrar göstermeye gerek yok.
+    saveStopwatchState();
   };
 
   const pauseStopwatch = () => {
@@ -3674,6 +3826,7 @@
     stopwatchLapBtn.classList.remove('is-visible');
     clearTimeout(lapControlsTimer);
     updateResetState();
+    saveStopwatchState();
   };
 
   const toggleStopwatch = () => {
@@ -3697,6 +3850,7 @@
     stopwatchFullscreenHint.classList.remove('is-hidden');
     renderLaps();
     updateResetState();
+    saveStopwatchState();
   };
 
   stopwatchResetBtn.addEventListener('click', resetStopwatch);
@@ -3773,8 +3927,10 @@
   // arka planda saymaya devam eder, ama gizleme sınıfları (nav bar dahil)
   // yalnızca Sayfa 5 aktifken anlamlı olduğundan sorun oluşturmaz; sayfaya
   // geri dönüldüğünde ekran otomatik doğru durumda görünür.
-  formatAndRenderTime(0);
-  updateResetState();
+  //
+  // Sayfa açılışında, daha önce kaydedilmiş bir kronometre durumu varsa
+  // (çalışıyor olsun ya da duraklatılmış olsun) burada geri yüklenir.
+  loadStopwatchState();
 </script>
 
 <script>
@@ -3967,11 +4123,34 @@
   // Uygulamayı çevrimdışı çalışır ve "gerçek uygulama" gibi açılır hale
   // getirir. file:// üzerinden açıldığında service worker desteklenmez;
   // bu yalnızca https:// veya localhost üzerinden yayınlandığında etkinleşir.
+  //
+  // updateViaCache: 'none' ÖNEMLİ: bu olmadan tarayıcı service-worker.js
+  // dosyasının kendisini HTTP cache'inden okuyabilir ve CACHE_VERSION'ı
+  // artırsanız bile yeni sürüm hiç indirilmez. Bu ayar, service-worker.js
+  // dosyasının her zaman ağdan (asla HTTP cache'inden) kontrol edilmesini
+  // garanti eder.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js').catch((err) => {
-        console.warn('Service worker kaydı başarısız:', err);
-      });
+      navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' })
+        .then((registration) => {
+          // Sayfa her açıldığında sunucudaki service-worker.js dosyasını
+          // hemen kontrol et; yeni bir sürüm varsa indirip devreye alır.
+          registration.update();
+        })
+        .catch((err) => {
+          console.warn('Service worker kaydı başarısız:', err);
+        });
+    });
+
+    // Yeni bir service worker devreye girdiğinde (eski sürümün yerini
+    // aldığında) açık olan sayfayı otomatik yeniler, böylece kullanıcı
+    // elle yenilemeden en güncel içeriği görür. reloaded bayrağı, bir
+    // döngüye girmesini (arka arkaya sürekli yenilenmeyi) engeller.
+    let swReloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (swReloaded) return;
+      swReloaded = true;
+      window.location.reload();
     });
   }
 </script>
