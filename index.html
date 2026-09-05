@@ -2456,6 +2456,23 @@
       };
       document.addEventListener('pointerdown', triggerOnce, { once: true });
     }
+
+    // Kullanıcı tam ekrandan anahtarı kullanmadan çıkarsa (sistem geri
+    // tuşu, kenar kaydırma hareketi, Esc, vb.) tarayıcı bunu bir kullanıcı
+    // eylemi olarak değil "fullscreenchange" event'i olarak bildirir; bu
+    // event anahtarın change listener'ını TETİKLEMEZ. Bu yüzden burada ayrıca
+    // dinleyip anahtarı ve kayıtlı tercihi tarayıcının gerçek durumuyla
+    // senkronize ediyoruz, böylece anahtar görsel olarak açık takılı kalmaz.
+    const syncToggleWithFullscreenState = () => {
+      const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+      if (!isFullscreen && fullscreenToggleInput.checked) {
+        fullscreenToggleInput.checked = false;
+        localStorage.setItem(FULLSCREEN_PREF_KEY, 'false');
+      }
+    };
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange'].forEach((eventName) => {
+      document.addEventListener(eventName, syncToggleWithFullscreenState);
+    });
   }
 </script>
 
