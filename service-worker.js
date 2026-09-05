@@ -13,7 +13,9 @@ const CACHE_NAME = 'takvimim-' + CACHE_VERSION;
 const APP_SHELL = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 // ---- Kurulum: uygulama kabuğunu önbelleğe al ----
