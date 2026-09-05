@@ -105,7 +105,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px calc(24px + env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) calc(24px + env(safe-area-inset-left));
+    padding: 24px 24px calc(96px + env(safe-area-inset-bottom));
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -128,14 +128,6 @@
   #page-2 {
     align-items: flex-start;
     padding-top: calc(48px + env(safe-area-inset-top));
-  }
-
-  /* Sayfa 5: kronometre, alt nav bar için ayrılan fazla alt boşluk
-     yüzünden yukarı kaymış görünüyordu; üst/alt boşluğu eşitleyip
-     ekranda tam ortalanmasını sağlıyoruz. */
-  #page-5 {
-    padding-top: calc(24px + env(safe-area-inset-top));
-    padding-bottom: calc(24px + env(safe-area-inset-bottom));
   }
 
   .page h1 {
@@ -2367,6 +2359,38 @@
 </script>
 
 <script>
+  // ---------- Yerel Depolama (localStorage) ----------
+  // Uygulamanın tüm verileri (görevler, tema, çark seçenekleri, kronometre)
+  // burada tanımlanan tek bir anahtar altında localStorage'a yazılır.
+  // Böylece sayfa yenilense, sekme kapansa veya uygulama tamamen kapatılıp
+  // yeniden açılsa bile kullanıcı verileri kaybolmaz.
+  const APP_STORAGE_KEY = 'takvimim_app_state_v1';
+
+  const loadAppState = () => {
+    try {
+      const raw = localStorage.getItem(APP_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (err) {
+      console.warn('Depolanan uygulama verisi okunamadı:', err);
+      return {};
+    }
+  };
+
+  // Sayfa yüklenirken bir kez okunan, bellekteki güncel durum.
+  const APP_STATE = loadAppState();
+
+  // Verilen alanları mevcut duruma ekleyip tamamını localStorage'a yazar.
+  const saveAppState = (patch) => {
+    try {
+      Object.assign(APP_STATE, patch);
+      localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(APP_STATE));
+    } catch (err) {
+      console.warn('Uygulama verisi kaydedilemedi:', err);
+    }
+  };
+</script>
+
+<script>
   const btn = document.querySelector('button');
 
   // Animasyonun her zaman en az bu kadar görünür kalmasını garanti ediyoruz.
@@ -2444,12 +2468,14 @@
 
   const layerA = document.getElementById('themeLayerA');
   const layerB = document.getElementById('themeLayerB');
-  let themeIndex = 0;
+  // Daha önce seçilmiş bir tema kaydedilmişse (localStorage), uygulama onunla açılır.
+  const savedThemeIndex = APP_STATE.theme;
+  let themeIndex = (typeof savedThemeIndex === 'number' && themes[savedThemeIndex]) ? savedThemeIndex : 0;
   let visibleLayer = layerA;
   let hiddenLayer = layerB;
 
-  layerA.style.background = themes[0].gradient;
-  document.documentElement.style.setProperty('--theme-text', themes[0].text);
+  layerA.style.background = themes[themeIndex].gradient;
+  document.documentElement.style.setProperty('--theme-text', themes[themeIndex].text);
 
   const applyNextTheme = () => {
     themeIndex = (themeIndex + 1) % themes.length;
@@ -2473,6 +2499,8 @@
     if (typeof window.syncSwatchSelection === 'function') {
       window.syncSwatchSelection(themeIndex);
     }
+
+    saveAppState({ theme: themeIndex });
   };
 
   // Belirli bir tema index'ini doğrudan uygular (Sayfa 3'teki gradyana
@@ -2492,6 +2520,8 @@
     const temp = visibleLayer;
     visibleLayer = hiddenLayer;
     hiddenLayer = temp;
+
+    saveAppState({ theme: themeIndex });
   };
 
   btn.addEventListener('click', applyNextTheme);
@@ -2729,6 +2759,56 @@
     });
   }
 
+  // Görev listesini (metin + işaretli/işaretsiz durumu) localStorage'a kaydeder.
+  const saveTasks = () => {
+    const tasks = Array.from(taskList.children).map((label) => {
+      const textEl = label.querySelector('.brutal-radio-text, .brutal-task-input');
+      const checkbox = label.querySelector('.brutal-radio');
+      return {
+        text: textEl ? (textEl.value !== undefined && textEl.tagName === 'INPUT' ? textEl.value : textEl.textContent) : '',
+        checked: !!(checkbox && checkbox.checked)
+      };
+    });
+    saveAppState({ tasks });
+  };
+
+  // Sayfa açılışında daha önce kaydedilmiş görevler varsa, örnek (demo)
+  // görevlerin yerine onları yükler.
+  const restoreTasks = () => {
+    const savedTasks = APP_STATE.tasks;
+    if (!Array.isArray(savedTasks)) return;
+
+    taskList.innerHTML = '';
+    savedTasks.forEach((task) => {
+      const label = document.createElement('label');
+      label.className = 'brutal-radio-label';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'brutal-radio';
+      checkbox.checked = !!task.checked;
+
+      const custom = document.createElement('span');
+      custom.className = 'brutal-radio-custom';
+
+      const span = document.createElement('span');
+      span.className = 'brutal-radio-text';
+      span.textContent = task.text || '';
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.setAttribute('aria-label', 'Görevi sil');
+      deleteBtn.textContent = '×';
+
+      label.appendChild(checkbox);
+      label.appendChild(custom);
+      label.appendChild(span);
+      label.appendChild(deleteBtn);
+      taskList.appendChild(label);
+    });
+  };
+
   const TASK_TRANSITION_MS = 320;
   // FLIP kaymasının kendi süresi/eğrisi: satırların yeniden hizalanması
   // opacity/renk geçişlerinden bağımsız, kendi başına yumuşak ve net olsun.
@@ -2826,6 +2906,7 @@
 
     label.addEventListener('transitionend', () => {
       label.remove();
+      saveTasks();
     }, { once: true });
   };
 
@@ -2848,6 +2929,7 @@
     span.className = 'brutal-radio-text';
     span.textContent = value;
     input.replaceWith(span);
+    saveTasks();
   };
 
   // Satırın sağındaki çarpı butonuna tıklanınca görevi siler.
@@ -2859,6 +2941,13 @@
     e.preventDefault();
     e.stopPropagation();
     removeTask(deleteBtn.closest('.brutal-radio-label'));
+  });
+
+  // Bir görev işaretlenip işareti kaldırıldığında da durumu kaydet.
+  taskList.addEventListener('change', (e) => {
+    if (e.target.classList.contains('brutal-radio')) {
+      saveTasks();
+    }
   });
 
   // Bir görev metnini (span) yerinde düzenlenebilir bir yazı alanına çevirir.
@@ -2979,6 +3068,11 @@
   };
 
   addTaskBtn.addEventListener('click', addTask);
+
+  // Uygulama açılırken kaydedilmiş görevleri geri yükle; hiç kayıt yoksa
+  // (ilk çalıştırma) örnek görevler olduğu gibi kalır ve ileride kaydedilir.
+  restoreTasks();
+  if (!Array.isArray(APP_STATE.tasks)) saveTasks();
 </script>
 
 <script>
@@ -2999,13 +3093,25 @@
   const WHEEL_MIN_OPTIONS = 2;
   const WHEEL_SPIN_MS = 3100;
 
-  let wheelOptions = ['Kahve molası', 'Kısa yürüyüş', 'Su iç', '5 dk esne', 'Derin nefes al', 'Devam et'];
+  const DEFAULT_WHEEL_OPTIONS = ['Kahve molası', 'Kısa yürüyüş', 'Su iç', '5 dk esne', 'Derin nefes al', 'Devam et'];
+  // Daha önce kaydedilmiş çark seçenekleri/renkleri varsa onlarla başlar.
+  const savedWheel = APP_STATE.wheel;
+  let wheelOptions = (savedWheel && Array.isArray(savedWheel.options) && savedWheel.options.length >= WHEEL_MIN_OPTIONS)
+    ? savedWheel.options.slice()
+    : DEFAULT_WHEEL_OPTIONS.slice();
   // Her seçeneğin kendi rengi: başlangıçta paletten sırayla atanır, ama
   // kullanıcı bir seçeneğe tıklayıp rengini değiştirdiğinde burada saklanır
   // ve seçenekler eklenip silinse de o seçeneğe özel renk olarak kalır.
-  let wheelOptionColors = wheelOptions.map((_, i) => WHEEL_PALETTE[i % WHEEL_PALETTE.length]);
+  let wheelOptionColors = (savedWheel && Array.isArray(savedWheel.colors) && savedWheel.colors.length === wheelOptions.length)
+    ? savedWheel.colors.slice()
+    : wheelOptions.map((_, i) => WHEEL_PALETTE[i % WHEEL_PALETTE.length]);
   let wheelRotation = 0;
   let isSpinning = false;
+
+  // Çark seçeneklerini ve renklerini localStorage'a kaydeder.
+  const saveWheelState = () => {
+    saveAppState({ wheel: { options: wheelOptions, colors: wheelOptionColors } });
+  };
   let wheelColorEditIndex = null;
 
   const colorForIndex = (i) => wheelOptionColors[i] || WHEEL_PALETTE[i % WHEEL_PALETTE.length];
@@ -3105,6 +3211,7 @@
     renderWheelOptions();
     buildWheel();
     resetWheelResult();
+    saveWheelState();
   };
 
   // "+ Seçenek" butonuna basınca yazı girilebilecek yeni bir satır açar;
@@ -3143,6 +3250,7 @@
         renderWheelOptions();
         buildWheel();
         resetWheelResult();
+        saveWheelState();
       } else {
         row.remove();
       }
@@ -3201,6 +3309,7 @@
         wheelOptionColors[wheelColorEditIndex] = color;
         renderWheelOptions();
         buildWheel();
+        saveWheelState();
         closeWheelColorPicker();
       });
 
@@ -3438,6 +3547,29 @@
   let stopwatchLaps = [];                // Kaydedilen turlar: { totalMs, splitMs }
   let stopwatchControlsVisible = false;  // Tam ekranda boş alana dokununca Tur butonu görünür mü?
 
+  // ---- Arka planda/uygulama kapansa bile çalışmaya devam eden kronometre ----
+  // performance.now() yalnızca geçerli sayfa oturumu için anlamlıdır ve sayfa
+  // yenilendiğinde/uygulama yeniden açıldığında sıfırlanır. Bu yüzden kalıcı
+  // depolamaya, gerçek zamanlı (duvar saati) bir referans olan Date.now()
+  // damgası (startEpoch) yazılır. Uygulama tekrar açıldığında, çalışıyor
+  // durumdaysa geçen süre bu damgadan yeniden hesaplanır; böylece kronometre
+  // sekme arka plandayken veya uygulama tamamen kapatılıp yeniden açıldığında
+  // bile doğru süreyi göstermeye devam eder.
+  const saveStopwatchState = () => {
+    // Çalışıyorsa, o ana kadar geçen TOPLAM süreyi anlık olarak hesaplayıp
+    // (currentElapsedMs) yeni bir "başlangıç" gibi kaydediyoruz; aksi halde
+    // her yeniden kaydedişte önceki segment tekrar tekrar eklenmiş olurdu.
+    const totalNow = swRunning ? currentElapsedMs() : swAccumulatedMs;
+    saveAppState({
+      stopwatch: {
+        accumulatedMs: totalNow,
+        running: swRunning,
+        startEpoch: swRunning ? Date.now() : null,
+        laps: stopwatchLaps
+      }
+    });
+  };
+
   const pad2 = (n) => String(n).padStart(2, '0');
 
   const formatTime = (ms) => {
@@ -3527,6 +3659,7 @@
     const prevTotal = stopwatchLaps.length ? stopwatchLaps[stopwatchLaps.length - 1].totalMs : 0;
     stopwatchLaps.push({ totalMs, splitMs: totalMs - prevTotal });
     renderLaps();
+    saveStopwatchState();
   };
 
   const currentElapsedMs = () =>
@@ -3558,6 +3691,7 @@
     if (swRafId) cancelAnimationFrame(swRafId);
     swRafId = requestAnimationFrame(stopwatchTick);
     updateResetState();
+    saveStopwatchState();
 
     // Tam ekran her açıldığında alt başlık 3 saniye görünür kalır, sonra kaybolur.
     stopwatchFullscreenHint.classList.remove('is-hidden');
@@ -3580,6 +3714,7 @@
     stopwatchLapBtn.classList.remove('is-visible');
     clearTimeout(lapControlsTimer);
     updateResetState();
+    saveStopwatchState();
   };
 
   const toggleStopwatch = () => {
@@ -3603,6 +3738,7 @@
     stopwatchFullscreenHint.classList.remove('is-hidden');
     renderLaps();
     updateResetState();
+    saveStopwatchState();
   };
 
   stopwatchResetBtn.addEventListener('click', resetStopwatch);
@@ -3679,8 +3815,48 @@
   // arka planda saymaya devam eder, ama gizleme sınıfları (nav bar dahil)
   // yalnızca Sayfa 5 aktifken anlamlı olduğundan sorun oluşturmaz; sayfaya
   // geri dönüldüğünde ekran otomatik doğru durumda görünür.
-  formatAndRenderTime(0);
-  updateResetState();
+
+  // ---- Kaydedilmiş kronometre durumunu geri yükle ----
+  // Uygulama kapatılıp (sekme kapanması, tarayıcı/PWA'nın işletim sistemi
+  // tarafından tamamen sonlandırılması dahil) yeniden açıldığında da
+  // kronometrenin doğru sürede devam etmesini sağlar.
+  const restoreStopwatch = () => {
+    const saved = APP_STATE.stopwatch;
+    if (!saved) {
+      formatAndRenderTime(0);
+      updateResetState();
+      return;
+    }
+
+    stopwatchLaps = Array.isArray(saved.laps) ? saved.laps : [];
+
+    if (saved.running && typeof saved.startEpoch === 'number') {
+      // Kapalıyken/arka plandayken geçen gerçek süreyi duvar saatinden hesapla.
+      swAccumulatedMs = Math.max(0, (saved.accumulatedMs || 0) + (Date.now() - saved.startEpoch));
+      startStopwatch(); // swAccumulatedMs'i temel alarak saymaya kaldığı yerden devam eder
+    } else {
+      swAccumulatedMs = saved.accumulatedMs || 0;
+      formatAndRenderTime(swAccumulatedMs);
+      stopwatchHint.textContent = swAccumulatedMs > 0 ? 'Devam etmek için dokun' : 'Başlatmak için dokun';
+    }
+
+    renderLaps();
+    updateResetState();
+  };
+
+  restoreStopwatch();
+
+  // Güvenlik ağı: sekme/uygulama arka plana alınırken veya kapanırken
+  // (visibilitychange/pagehide her zaman garanti olmasa da mümkün olduğunca)
+  // o anki durumu da kaydet, ki kaydedilen startEpoch her zaman en güncel olsun.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && swRunning) {
+      saveStopwatchState();
+    }
+  });
+  window.addEventListener('pagehide', () => {
+    if (swRunning) saveStopwatchState();
+  });
 </script>
 
 <script>
