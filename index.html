@@ -16,7 +16,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&display=swap" rel="stylesheet">
 <style>
   * {
     margin: 0;
@@ -88,6 +88,25 @@
 
   .theme-layer.is-visible {
     opacity: 1;
+  }
+
+  /* Tema katmanlarının hemen üzerinde duran, isteğe bağlı ince doku
+     (desen) katmanı. Rengi her zaman "currentColor" ile tanımlanır ve
+     JS tarafından o an aktif temanın yazı rengine (--theme-text) göre,
+     düşük bir alfa değeriyle ayarlanır; böylece desen açık temada koyu,
+     koyu temada açık görünür ve her zaman okunaklı/ince kalır. */
+  .pattern-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-repeat: repeat;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+  }
+
+  .pattern-layer.is-swapping {
+    opacity: 0;
   }
 
   /* ---------- Sayfalar ---------- */
@@ -271,16 +290,16 @@
      yalnızca görsel amaçlı. Orijinalindeki position:absolute/translate
      kaldırıldı, çünkü burada bir flex kolonu içinde normal akışta
      Button'ın altında durması gerekiyor. */
-  .home-toggle {
+  .brutal-toggle {
     display: inline-block;
     cursor: pointer;
   }
 
-  .home-toggle input {
+  .brutal-toggle input {
     display: none;
   }
 
-  .home-toggle .track {
+  .brutal-toggle .track {
     position: relative;
     display: block;
     width: 41px;
@@ -290,7 +309,7 @@
     transition: background 0.25s;
   }
 
-  .home-toggle .thumb {
+  .brutal-toggle .thumb {
     position: absolute;
     top: 2.5px;
     left: 2.3px;
@@ -304,7 +323,7 @@
       0 6px 12px rgba(0, 0, 0, 0.18);
   }
 
-  .home-toggle input:checked + .track .thumb {
+  .brutal-toggle input:checked + .track .thumb {
     transform: translateX(9px);
   }
 
@@ -465,7 +484,7 @@
     --font-color-dark: #f2f2f4;
   }
 
-  /* Button + anahtarı dikeyde ortalanmış şekilde alt alta hizalar */
+  /* Sayfa 1'deki tema değiştirme butonunu dikeyde ortalar */
   .home-content {
     display: flex;
     flex-direction: column;
@@ -1716,14 +1735,16 @@
 
   body.is-stopwatch-running .navbar,
   body.is-calendar-open .navbar,
-  body.is-laps-open .navbar {
+  body.is-laps-open .navbar,
+  body.is-patterns-open .navbar {
     opacity: 0;
     transform: translateY(28px);
   }
 
   body.is-stopwatch-running .navbar .wrapper,
   body.is-calendar-open .navbar .wrapper,
-  body.is-laps-open .navbar .wrapper {
+  body.is-laps-open .navbar .wrapper,
+  body.is-patterns-open .navbar .wrapper {
     pointer-events: none;
   }
 
@@ -2151,9 +2172,9 @@
     line-height: 1.35;
   }
 
-  /* Karanlık mod anahtarı: Sayfa 1'deki .home-toggle ile birebir aynı
-     görünüm (.toggle .track .thumb sınıfları paylaşılıyor), böylece iki
-     anahtar da aynı switch'in iki yüzü gibi hissettiriyor. */
+  /* Karanlık mod anahtarı: uygulamanın genel .brutal-toggle görünümünü
+     (.track / .thumb sınıfları) kullanır, sadece hizalama için ufak bir
+     ek sınıf. */
   .settings-toggle {
     flex-shrink: 0;
   }
@@ -2206,6 +2227,113 @@
   .settings-theme-swatch.is-selected .settings-theme-swatch-check {
     opacity: 1;
     transform: scale(1);
+  }
+
+  /* ---------- "Desenler" satırı: Ayarlar'dan alt sayfaya geçiş ----------
+     Sayfa 5'teki "Takvim" butonuyla aynı fikir: dokunulabilir bir satır,
+     seçili deseni gösteren küçük bir rozet ve yön oku ile bir alt sayfaya
+     açılır. */
+  .settings-row-link {
+    border: none;
+    background: none;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 0.75rem;
+    margin: 0 -0.3rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    transition: background-color 0.15s ease;
+    font: inherit;
+  }
+
+  .settings-row-link:hover {
+    background-color: rgba(18, 18, 18, 0.045);
+  }
+
+  .settings-row-link:active {
+    background-color: rgba(18, 18, 18, 0.09);
+  }
+
+  .settings-row-link-right {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .settings-pattern-chip {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 0.55rem;
+    border: 2px solid #000;
+    background-repeat: repeat;
+    background-color: #eee;
+  }
+
+  .settings-row-chevron {
+    color: rgba(18, 18, 18, 0.35);
+  }
+
+  body.is-anthracite .settings-row-link:hover {
+    background-color: rgba(242, 242, 244, 0.08);
+  }
+
+  body.is-anthracite .settings-row-link:active {
+    background-color: rgba(242, 242, 244, 0.15);
+  }
+
+  body.is-anthracite .settings-row-chevron {
+    color: rgba(242, 242, 244, 0.4);
+  }
+
+  body.is-anthracite .settings-pattern-chip {
+    border-color: #000;
+  }
+
+  /* ---------- Desenler Alt Sayfası ----------
+     Sayfa 6/7'nin üst çubuğuyla (.calendar-topbar / .calendar-back-btn)
+     aynı bileşeni, Sayfa 3'ün renk kataloğuyla (.theme-swatch-card ve
+     alt sınıfları) aynı kartı kullanır — yeni bir görsel dil icat etmek
+     yerine uygulamanın kendi kurduğu iki kalıbı birleştiriyoruz. */
+  #page-patterns {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.1rem;
+    padding: calc(22px + env(safe-area-inset-top)) 20px calc(22px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+
+  #page-patterns .calendar-topbar {
+    max-width: 340px;
+  }
+
+  .pattern-preview {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 0.9rem;
+    border: none;
+    cursor: pointer;
+    background-repeat: repeat;
+  }
+
+  .pattern-preview-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.32);
+    color: #fff;
+    backdrop-filter: blur(2px);
   }
 
   /* ---------- Hafta başlangıcı: kayan siyah pil ile segmented control ----------
@@ -2458,6 +2586,7 @@
 
 <div class="theme-layer is-visible" id="themeLayerA"></div>
 <div class="theme-layer" id="themeLayerB"></div>
+<div class="pattern-layer" id="patternLayer"></div>
 
 <div class="app">
 
@@ -2677,9 +2806,8 @@
     <div class="settings-page">
       <div class="settings-hero">
         <span class="settings-hero-icon" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/>
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill-rule="evenodd" fill="currentColor" d="M18.02 10.5 L20.49 10.65 L20.49 13.35 L18.02 13.5 L17.31 15.19 L18.96 17.05 L17.05 18.96 L15.19 17.31 L13.5 18.02 L13.35 20.49 L10.65 20.49 L10.5 18.02 L8.81 17.31 L6.95 18.96 L5.04 17.05 L6.69 15.19 L5.98 13.5 L3.51 13.35 L3.51 10.65 L5.98 10.5 L6.69 8.81 L5.04 6.95 L6.95 5.04 L8.81 6.69 L10.5 5.98 L10.65 3.51 L13.35 3.51 L13.5 5.98 L15.19 6.69 L17.05 5.04 L18.96 6.95 L17.31 8.81 Z M14.6 12 A2.6 2.6 0 1 0 9.4 12 A2.6 2.6 0 1 0 14.6 12 Z"/>
           </svg>
         </span>
         <h1 class="settings-title">Ayarlar</h1>
@@ -2694,7 +2822,7 @@
               <span class="settings-row-desc">Kartlar ve butonlar antresit tona döner</span>
             </div>
             <!-- From Uiverse.io by corentinchene (Sayfa 1'deki anahtarla aynı) -->
-            <label class="toggle home-toggle settings-toggle" id="settingsDarkToggleWrap">
+            <label class="toggle brutal-toggle settings-toggle" id="settingsDarkToggleWrap">
               <input type="checkbox" id="settingsDarkToggle" />
               <span class="track">
                 <span class="thumb"></span>
@@ -2708,6 +2836,21 @@
             <span class="settings-row-title">Renk teması</span>
             <div class="settings-theme-picker" id="settingsThemePicker"></div>
           </div>
+
+          <div class="settings-divider"></div>
+
+          <button type="button" class="settings-row settings-row-link" id="settingsPatternsLink">
+            <div class="settings-row-text">
+              <span class="settings-row-title">Desenler</span>
+              <span class="settings-row-desc">Arka plana ince bir doku ekle</span>
+            </div>
+            <div class="settings-row-link-right">
+              <span class="settings-pattern-chip" id="settingsPatternChip" aria-hidden="true"></span>
+              <svg class="settings-row-chevron" viewBox="0 0 24 24" width="16" height="16">
+                <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -2755,6 +2898,41 @@
       </div>
     </div>
   </div>
+
+  <!-- Ayarlar > Desenler: nav bar'ın dışında, Sayfa 6/7 gibi yalnızca
+       "Desenler" satırıyla açılan bağımsız bir alt sayfa. Katalog kartı
+       Sayfa 3'teki renk paleti kartıyla (.theme-swatch-card ve alt
+       sınıfları) birebir aynı bileşenleri kullanır. -->
+  <section class="page" id="page-patterns">
+    <div class="calendar-topbar">
+      <button type="button" class="calendar-back-btn" id="patternsBackBtn" aria-label="Geri dön">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="calendar-topbar-title">Desenler</span>
+      <span class="calendar-topbar-spacer" aria-hidden="true"></span>
+    </div>
+
+    <div class="theme-swatch-card">
+      <div class="theme-swatch-viewport" id="patternSwatchViewport">
+        <!-- Her desen için bir .theme-swatch-slide, JS tarafından ekleniyor -->
+      </div>
+      <div class="theme-swatch-bar">
+        <button type="button" class="swatch-arrow" id="patternSwatchPrev" aria-label="Önceki desen">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="theme-swatch-dots" id="patternSwatchDots"></div>
+        <button type="button" class="swatch-arrow" id="patternSwatchNext" aria-label="Sonraki desen">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
 
 </div>
 
@@ -2814,6 +2992,14 @@
   // metinler asla aynı anda görünüp iç içe girmesin.
   const PAGE_TRANSITION_MS = 200;
   let activePage = document.querySelector('.page.is-active');
+  // Bir geçiş bitmeden yenisi başlarsa, eski geçişin setTimeout'u hâlâ
+  // hafızada bekleyip yanlış zamanda yanlış sayfaya is-active/is-leaving
+  // ekleyebiliyordu (iki sayfa üst üste "aktif" kalıp biri diğerinin
+  // tıklamalarını görünmez şekilde engelliyordu). Bu yüzden her yeni
+  // geçişte önceki zamanlayıcıyı iptal edip tüm sayfaları temiz bir
+  // duruma getiriyoruz; böylece animasyonun bitmesi beklenmeden art arda
+  // hızlıca farklı butonlara basılabilir.
+  let pageTransitionTimer = null;
 
   const goToPage = (id) => {
     const nextPage = document.getElementById(id);
@@ -2821,17 +3007,30 @@
     const prevPage = activePage;
     activePage = nextPage;
 
+    if (pageTransitionTimer) {
+      clearTimeout(pageTransitionTimer);
+      pageTransitionTimer = null;
+    }
+    // Yarım kalmış bir geçişten arta kalmış olabilecek is-active/is-leaving
+    // sınıflarını, hedef sayfa dışındaki her yerden temizle.
+    document.querySelectorAll('.page').forEach((page) => {
+      if (page !== nextPage) {
+        page.classList.remove('is-active');
+        page.classList.remove('is-leaving');
+      }
+    });
+
     if (!prevPage) {
       nextPage.classList.add('is-active');
       return;
     }
 
-    prevPage.classList.remove('is-active');
     prevPage.classList.add('is-leaving');
 
-    setTimeout(() => {
+    pageTransitionTimer = setTimeout(() => {
       prevPage.classList.remove('is-leaving');
       nextPage.classList.add('is-active');
+      pageTransitionTimer = null;
     }, PAGE_TRANSITION_MS);
   };
 
@@ -2886,28 +3085,24 @@
 </script>
 
 <script>
-  // Karanlık mod anahtarı artık yalnızca Ayarlar sayfasında yaşıyor.
-  // Aktif edildiğinde button_top butonları antresit (koyu mod) tonuna
-  // geçer (body.is-anthracite class'ı üzerinden CSS tetiklenir). Anahtarın
-  // durumu (açık/kapalı) APP_STATE üzerinden localStorage'a kaydedilir;
-  // böylece en son açık bırakıldıysa bir sonraki girişte de anahtar açık
-  // olarak yüklenir. (Not: bu script, id="settingsDarkToggle" elemanından
-  // önce çalışır; ama olay dinleyicisi ekleme işlemi DOM elemanı bulununca
-  // yapıldığı için sıra sorun teşkil etmez — element sayfa HTML'inde bu
-  // script'ten önce zaten mevcut.)
-  const homeToggleInput = document.getElementById('settingsDarkToggle');
-  if (homeToggleInput) {
+  // Ayarlar sayfasındaki "Karanlık mod" anahtarı aktif edildiğinde
+  // button_top butonları antresit tonuna geçer (body.is-anthracite class'ı
+  // üzerinden CSS tetiklenir). Anahtarın durumu (açık/kapalı) APP_STATE
+  // üzerinden localStorage'a kaydedilir; böylece en son açık bırakıldıysa
+  // bir sonraki girişte de anahtar açık olarak yüklenir.
+  const darkModeToggle = document.getElementById('settingsDarkToggle');
+  if (darkModeToggle) {
     // Sayfa açılırken daha önce kaydedilmiş bir durum varsa uygula.
     if (typeof APP_STATE.anthracite === 'boolean') {
-      homeToggleInput.checked = APP_STATE.anthracite;
+      darkModeToggle.checked = APP_STATE.anthracite;
     }
 
     const syncAnthracite = () => {
-      document.body.classList.toggle('is-anthracite', homeToggleInput.checked);
+      document.body.classList.toggle('is-anthracite', darkModeToggle.checked);
     };
-    homeToggleInput.addEventListener('change', () => {
+    darkModeToggle.addEventListener('change', () => {
       syncAnthracite();
-      saveAppState({ anthracite: homeToggleInput.checked });
+      saveAppState({ anthracite: darkModeToggle.checked });
     });
     syncAnthracite();
   }
@@ -3247,6 +3442,13 @@
       const check = slide.querySelector('.swatch-check');
       if (check) check.classList.toggle('is-selected', i === index);
     });
+    // Ayarlar sayfasındaki mini tema seçici (henüz tanımlanmamış olabilir,
+    // bu script'ten sonra oluşturuluyor) kendini bu kancaya bağlar; böylece
+    // tema Sayfa 1, Sayfa 3 veya Ayarlar'ın herhangi birinden değiştirilse
+    // bile üçü de anında senkron kalır.
+    if (typeof window.onThemeSelectionChanged === 'function') {
+      window.onThemeSelectionChanged(index);
+    }
   };
   // Sayfa 1'in butonuna bağlı olan applyNextTheme, bu script'ten önce
   // tanımlandığı için ona window üzerinden erişiyor.
@@ -3257,11 +3459,7 @@
   const selectTheme = (index) => {
     if (index === selectedSwatchIndex) return;
     applyTheme(index);
-    // window.syncSwatchSelection üzerinden çağırıyoruz (yerel syncSwatchSelection
-    // yerine): Ayarlar sayfası scripti bu fonksiyonu sarmalayıp kendi renk
-    // toplarını da güncelliyor. Doğrudan yerel referansı çağırırsak o sarmalama
-    // atlanır ve Ayarlar'daki tik işareti tema seçilirken anında görünmez.
-    window.syncSwatchSelection(index);
+    syncSwatchSelection(index);
   };
 </script>
 
@@ -4562,7 +4760,8 @@
   // APP_STATE, saveAppState, themes, selectTheme, syncSwatchSelection,
   // calendarWeekStart, renderCalendarWeekdaysHeader ve renderCalendarGrid
   // gibi daha önce tanımlanmış değişken/fonksiyonlara doğrudan (aynı
-  // script scope'unu paylaştıkları için) erişebilir.
+  // script scope'unu paylaştıkları için) erişebilir. Karanlık mod anahtarı
+  // (#settingsDarkToggle) kendi mantığıyla ayrı bir script'te ele alınıyor.
 
   // ---- Renk teması seçici: 4 renk topu, Sayfa 3'teki paletle aynı kaynak ----
   const settingsThemePicker = document.getElementById('settingsThemePicker');
@@ -4595,14 +4794,11 @@
     });
   };
 
-  // Sayfa 1'in butonu veya Sayfa 3'ün paleti temayı değiştirdiğinde bu
-  // sayfadaki toplar da güncellensin diye syncSwatchSelection'ı sarmalıyoruz
-  // (aynı Sayfa 3'ün Sayfa 1'e bağlanma yöntemiyle).
-  const settingsPrevSyncSwatchSelection = window.syncSwatchSelection;
-  window.syncSwatchSelection = (index) => {
-    if (typeof settingsPrevSyncSwatchSelection === 'function') settingsPrevSyncSwatchSelection(index);
-    syncSettingsThemeSwatches(index);
-  };
+  // Sayfa 1'in butonu, Sayfa 3'ün paleti veya bu sayfanın kendisi temayı
+  // değiştirdiğinde tetiklenen ortak kancaya bağlanıyoruz (syncSwatchSelection
+  // içinden çağrılır); böylece hangi yoldan tıklanırsa tıklansın tik anında
+  // doğru daireye taşınır.
+  window.onThemeSelectionChanged = syncSettingsThemeSwatches;
 
   // ---- Hafta başlangıcı: kayan siyah pil ile segmented control ----
   const weekStartSegmented = document.getElementById('weekStartSegmented');
@@ -4670,6 +4866,273 @@
 </script>
 
 <script>
+  // ---------- Ayarlar > Desenler ----------
+  // Arka plana isteğe bağlı, ince bir doku ekler. Tüm desenler CSS
+  // "currentColor" ile tanımlanır; renk her zaman aktif temanın
+  // --theme-text değerinden düşük bir alfa ile üretilir (bkz. hexToRgba).
+  // Böylece desen açık temada koyu, koyu temada açık görünür ve hangi
+  // renk teması seçili olursa olsun okunurluğu asla bozmaz.
+  const PATTERN_DEFAULT_ID = 'none';
+
+  const hexToRgba = (hex, alpha) => {
+    const clean = hex.replace('#', '');
+    const r = parseInt(clean.substring(0, 2), 16);
+    const g = parseInt(clean.substring(2, 4), 16);
+    const b = parseInt(clean.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  const patterns = [
+    { id: 'none', name: 'Yok', backgroundImage: 'none', backgroundSize: 'auto', alpha: 0 },
+    {
+      id: 'dots',
+      name: 'Noktalar',
+      backgroundImage: 'radial-gradient(currentColor 2.4px, transparent 2.6px)',
+      backgroundSize: '22px 22px',
+      alpha: 0.22
+    },
+    {
+      id: 'stripes',
+      name: 'Çizgiler',
+      backgroundImage: 'repeating-linear-gradient(45deg, currentColor 0 3px, transparent 3px 16px)',
+      backgroundSize: 'auto',
+      alpha: 0.16
+    },
+    {
+      id: 'grid',
+      name: 'Izgara',
+      backgroundImage:
+        'linear-gradient(currentColor 1.5px, transparent 1.5px), linear-gradient(90deg, currentColor 1.5px, transparent 1.5px)',
+      backgroundSize: '26px 26px',
+      alpha: 0.16
+    },
+    {
+      id: 'checker',
+      name: 'Dama',
+      backgroundImage:
+        'conic-gradient(currentColor 90deg, transparent 90deg 180deg, currentColor 180deg 270deg, transparent 270deg)',
+      backgroundSize: '28px 28px',
+      alpha: 0.12
+    },
+    {
+      id: 'confetti',
+      name: 'Konfeti',
+      backgroundImage:
+        'radial-gradient(circle at 12% 22%, currentColor 3px, transparent 3.6px),' +
+        'radial-gradient(circle at 62% 12%, currentColor 2px, transparent 2.6px),' +
+        'radial-gradient(circle at 82% 58%, currentColor 4px, transparent 4.6px),' +
+        'radial-gradient(circle at 32% 68%, currentColor 2.4px, transparent 3px),' +
+        'radial-gradient(circle at 55% 88%, currentColor 3px, transparent 3.6px),' +
+        'radial-gradient(circle at 92% 92%, currentColor 2px, transparent 2.6px),' +
+        'radial-gradient(circle at 15% 52%, currentColor 1.8px, transparent 2.3px)',
+      backgroundSize: '140px 140px',
+      alpha: 0.28
+    }
+  ];
+
+  const patternById = (id) => patterns.find((p) => p.id === id) || patterns[0];
+
+  // Desen tanımları "currentColor" kullanıyor, ama bazı tarayıcılar
+  // sadece "color" özelliği değiştiğinde background-image içindeki
+  // currentColor'ı yeniden boyamıyor (gradyan önbelleğe alınmış gibi
+  // kalabiliyor). Bu yüzden rengi doğrudan gradyan string'inin İÇİNE
+  // gömüyoruz: background-image'in metni her renk değişiminde gerçekten
+  // farklılaşıyor, böylece tarayıcı yeniden çizmek ZORUNDA kalıyor.
+  const renderPatternBackground = (pattern, colorStr) =>
+    pattern.backgroundImage.split('currentColor').join(colorStr);
+
+  const patternLayer = document.getElementById('patternLayer');
+  let currentPatternId =
+    typeof APP_STATE.pattern === 'string' && patterns.some((p) => p.id === APP_STATE.pattern)
+      ? APP_STATE.pattern
+      : PATTERN_DEFAULT_ID;
+
+  // Katmanın arka plan resmini ve rengini uygular. fade=true iken (kullanıcı
+  // yeni bir desen seçtiğinde) kısa bir solma-belirme geçişiyle, fade=false
+  // iken (sayfa açılışı veya sadece tema değişimi) anında uygulanır.
+  const applyPatternLayer = (id, fade) => {
+    const pattern = patternById(id);
+    const setStyles = () => {
+      const colorStr = hexToRgba(themes[themeIndex].text, pattern.alpha);
+      patternLayer.style.backgroundImage = renderPatternBackground(pattern, colorStr);
+      patternLayer.style.backgroundSize = pattern.backgroundSize;
+      patternLayer.style.color = colorStr;
+    };
+    if (fade) {
+      patternLayer.classList.add('is-swapping');
+      setTimeout(() => {
+        setStyles();
+        patternLayer.classList.remove('is-swapping');
+      }, 220);
+    } else {
+      setStyles();
+    }
+  };
+
+  applyPatternLayer(currentPatternId, false);
+
+  // Ayarlar satırındaki küçük önizleme rozetini (chip) günceller.
+  const settingsPatternChip = document.getElementById('settingsPatternChip');
+  const updateSettingsPatternChip = () => {
+    if (!settingsPatternChip) return;
+    const pattern = patternById(currentPatternId);
+    const colorStr = hexToRgba(themes[themeIndex].text, Math.min(pattern.alpha + 0.12, 0.5));
+    settingsPatternChip.style.backgroundColor = themes[themeIndex].gradient;
+    settingsPatternChip.style.backgroundImage = renderPatternBackground(pattern, colorStr);
+    settingsPatternChip.style.backgroundSize = pattern.backgroundSize;
+    settingsPatternChip.style.color = colorStr;
+  };
+  updateSettingsPatternChip();
+
+  const setPattern = (id, { persist } = { persist: true }) => {
+    currentPatternId = id;
+    applyPatternLayer(id, persist); // sadece kullanıcı bir desen SEÇTİĞİNDE solduruyoruz
+    updateSettingsPatternChip();
+    updatePatternSwatchSelection();
+    if (persist) saveAppState({ pattern: id });
+  };
+
+  // Tema değişince (Sayfa 1, Sayfa 3 veya Ayarlar'ın herhangi birinden)
+  // desenin rengi, rozeti ve alt sayfadaki önizlemeler de güncellensin.
+  const prevOnThemeChangedForPatterns = window.onThemeSelectionChanged;
+  window.onThemeSelectionChanged = (index) => {
+    if (typeof prevOnThemeChangedForPatterns === 'function') prevOnThemeChangedForPatterns(index);
+    applyPatternLayer(currentPatternId, false);
+    updateSettingsPatternChip();
+    refreshPatternSlideColors();
+  };
+
+  // ---- Desenler alt sayfası: Sayfa 3'teki kart/viewport/dots/ok
+  //      bileşenlerini (.theme-swatch-card ve alt sınıfları) aynen
+  //      kullanır; farkı hex-kod açma efekti olmaması ve her slaytın bir
+  //      gradyan yerine gerçek desen önizlemesi göstermesidir. ----
+  const patternSwatchViewport = document.getElementById('patternSwatchViewport');
+  const patternSwatchDots = document.getElementById('patternSwatchDots');
+  const patternSwatchPrev = document.getElementById('patternSwatchPrev');
+  const patternSwatchNext = document.getElementById('patternSwatchNext');
+
+  let patternSlideIndex = Math.max(
+    patterns.findIndex((p) => p.id === currentPatternId),
+    0
+  );
+  const patternSlideEls = [];
+
+  patterns.forEach((pattern, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'theme-swatch-slide' + (i === patternSlideIndex ? ' is-active' : '');
+
+    const preview = document.createElement('button');
+    preview.type = 'button';
+    preview.className = 'pattern-preview';
+    const previewColorStr = hexToRgba(themes[themeIndex].text, pattern.alpha);
+    preview.style.backgroundColor = themes[themeIndex].gradient;
+    preview.style.backgroundImage = renderPatternBackground(pattern, previewColorStr);
+    preview.style.backgroundSize = pattern.backgroundSize;
+    preview.style.color = previewColorStr;
+    preview.setAttribute('aria-label', pattern.name + ' desenini seç');
+
+    const label = document.createElement('span');
+    label.className = 'pattern-preview-label';
+    label.textContent = pattern.name;
+    preview.appendChild(label);
+
+    const check = document.createElement('span');
+    check.className = 'swatch-check' + (pattern.id === currentPatternId ? ' is-selected' : '');
+    check.style.setProperty('--swatch-check-color', getCheckColorForGradient(themes[themeIndex].gradient));
+    check.textContent = '✓';
+
+    preview.addEventListener('click', () => {
+      if (pattern.id === currentPatternId) return; // zaten seçiliyse tekrar tetikleme
+      setPattern(pattern.id);
+    });
+
+    slide.appendChild(preview);
+    slide.appendChild(check);
+    patternSwatchViewport.appendChild(slide);
+    patternSlideEls.push(slide);
+
+    const dot = document.createElement('span');
+    dot.className = 'swatch-dot' + (i === patternSlideIndex ? ' is-active' : '');
+    patternSwatchDots.appendChild(dot);
+  });
+
+  const updatePatternSwatchDots = () => {
+    Array.from(patternSwatchDots.children).forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === patternSlideIndex);
+    });
+  };
+
+  const updatePatternSwatchSelection = () => {
+    patternSlideEls.forEach((slide, i) => {
+      const check = slide.querySelector('.swatch-check');
+      if (check) check.classList.toggle('is-selected', patterns[i].id === currentPatternId);
+    });
+  };
+
+  // Slaytların içindeki önizlemelerin zeminini/rengini tema değişince
+  // (veya ilk açılışta) günceller.
+  const refreshPatternSlideColors = () => {
+    patternSlideEls.forEach((slide, i) => {
+      const pattern = patterns[i];
+      const preview = slide.querySelector('.pattern-preview');
+      const check = slide.querySelector('.swatch-check');
+      if (preview) {
+        const colorStr = hexToRgba(themes[themeIndex].text, pattern.alpha);
+        preview.style.backgroundColor = themes[themeIndex].gradient;
+        preview.style.backgroundImage = renderPatternBackground(pattern, colorStr);
+        preview.style.color = colorStr;
+      }
+      if (check) check.style.setProperty('--swatch-check-color', getCheckColorForGradient(themes[themeIndex].gradient));
+    });
+  };
+
+  // direction: 1 = sağa (sonraki desen), -1 = sola (önceki desen)
+  const goToPatternSwatch = (newIndex, direction) => {
+    const total = patternSlideEls.length;
+    newIndex = (newIndex + total) % total;
+    if (newIndex === patternSlideIndex) return;
+
+    const current = patternSlideEls[patternSlideIndex];
+    const next = patternSlideEls[newIndex];
+
+    current.style.setProperty('--slide-offset', direction === 1 ? '-24px' : '24px');
+    current.classList.remove('is-active');
+
+    next.style.setProperty('--slide-offset', direction === 1 ? '24px' : '-24px');
+    next.style.transition = 'none';
+    next.getBoundingClientRect(); // reflow'u zorla, sonra animasyonu başlat
+    requestAnimationFrame(() => {
+      next.style.transition = '';
+      next.classList.add('is-active');
+    });
+
+    patternSlideIndex = newIndex;
+    updatePatternSwatchDots();
+  };
+
+  patternSwatchPrev.addEventListener('click', () => goToPatternSwatch(patternSlideIndex - 1, -1));
+  patternSwatchNext.addEventListener('click', () => goToPatternSwatch(patternSlideIndex + 1, 1));
+
+  // ---- Ayarlar > Desenler satırı: alt sayfayı aç/kapat (Sayfa 5 -> Sayfa 6
+  //      Takvim geçişiyle birebir aynı goToPage akışı, nav bar aynı şekilde
+  //      gizlenir). ----
+  const settingsPatternsLink = document.getElementById('settingsPatternsLink');
+  const patternsBackBtn = document.getElementById('patternsBackBtn');
+
+  const openPatternsPage = () => {
+    document.body.classList.add('is-patterns-open'); // nav bar'ı gizler
+    goToPage('page-patterns');
+  };
+  const closePatternsPage = () => {
+    document.body.classList.remove('is-patterns-open');
+    goToPage('page-settings');
+  };
+
+  if (settingsPatternsLink) settingsPatternsLink.addEventListener('click', openPatternsPage);
+  if (patternsBackBtn) patternsBackBtn.addEventListener('click', closePatternsPage);
+</script>
+
+<script>
   // ---------- Yakınlaştırmayı Engelle ----------
   // Safari, viewport meta etiketini (user-scalable=no) yok sayıp iki
   // parmakla veya çift dokunarak yakınlaştırmaya izin verebiliyor;
@@ -4679,13 +5142,21 @@
   });
 
   // Çift dokunmayla yakınlaştırmayı engelle (iOS Safari).
+  // ÖNEMLİ: Sadece AYNI elemana kısa sürede iki kez dokunulduğunda
+  // (gerçek çift-dokunma jesti) engelliyoruz. Farklı butonlara art arda
+  // hızlıca dokunmak çift-dokunma DEĞİLDİR; bunu da engellersek her
+  // butondan sonra ~300ms beklemeden bir sonrakine dokunulamaz hale gelir
+  // (click olayı hiç tetiklenmez), ki asıl şikayet edilen sorun buydu.
   let lastTouchEndAt = 0;
+  let lastTouchEndTarget = null;
   document.addEventListener('touchend', (e) => {
     const now = Date.now();
-    if (now - lastTouchEndAt <= 300) {
+    const target = e.target;
+    if (target === lastTouchEndTarget && now - lastTouchEndAt <= 300) {
       e.preventDefault();
     }
     lastTouchEndAt = now;
+    lastTouchEndTarget = target;
   }, { passive: false });
 
   // İki parmakla dokunmayı (pinch) daha da erken aşamada engelle.
