@@ -2131,6 +2131,13 @@
     background-color: #ff90e8;
   }
 
+  /* "+" karakteri bu fontta optik olarak hafif yukarıda duruyor;
+     "-" ile aynı görsel merkeze oturması için ince bir aşağı kaydırma. */
+  .page9-stepper-plus-icon {
+    position: relative;
+    top: -0.09em;
+  }
+
   .page9-count-input {
     flex: 1 1 auto;
     min-width: 0;
@@ -6702,8 +6709,8 @@
 
     const plusBtn = document.createElement('button');
     plusBtn.type = 'button';
-    plusBtn.className = 'page9-stepper-btn';
-    plusBtn.textContent = '+';
+    plusBtn.className = 'page9-stepper-btn page9-stepper-plus';
+    plusBtn.innerHTML = '<span class="page9-stepper-plus-icon">+</span>';
     plusBtn.setAttribute('aria-label', 'Sayıyı artır');
 
     minusBtn.addEventListener('click', () => {
@@ -6954,7 +6961,16 @@
   document.addEventListener('touchend', (e) => {
     const now = Date.now();
     const target = e.target;
-    if (target === lastTouchEndTarget && now - lastTouchEndAt <= 300) {
+    // Butonlar, inputlar ve benzer interaktif kontroller kasıtlı olarak
+    // art arda hızlıca tıklanabilir (ör. +/- sayaç butonları). Bunlar
+    // çift-dokunma-zoom jesti DEĞİLDİR; bu yüzden bu tür elemanlarda
+    // preventDefault uygulamıyoruz, aksi halde ikinci hızlı tıklama hiç
+    // click olayı üretmiyordu (asıl şikayet edilen "hızlı tıklayınca
+    // tepki vermiyor" sorunu buydu).
+    const isInteractiveControl = target.closest(
+      'button, input, a, label, select, textarea, [role="button"]'
+    );
+    if (!isInteractiveControl && target === lastTouchEndTarget && now - lastTouchEndAt <= 300) {
       e.preventDefault();
     }
     lastTouchEndAt = now;
