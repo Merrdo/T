@@ -191,7 +191,7 @@
     position: absolute;
     top: 2px;
     left: 2px;
-    width: calc((340px - 8px) / 6);
+    width: calc((340px - 8px) / 9);
     height: 36px;
     background-color: var(--main-color);
     border-radius: 50px;
@@ -201,7 +201,7 @@
   }
 
   .option {
-    width: calc((340px - 8px) / 6);
+    width: calc((340px - 8px) / 9);
     height: 36px;
     position: relative;
     top: 2px;
@@ -423,6 +423,152 @@
     color: #f2f2f4;
   }
 
+  /* Sayfa 8: anahtar aktifken kategori/rutin kartlarındaki beyaz yüzeyler
+     ve üstteki Görevler/Rutinler ikili seçim kutusu da antresit tonuna
+     geçer. Grubun kendi seçtiği renk (üst şerit, nokta, işaretli checkbox
+     dolgusu) JS ile ayarlandığından dokunulmuyor; sadece nötr beyaz/siyah
+     yüzeyler ve metinler tema ile birlikte değişiyor. */
+  body.is-anthracite .page8-group-card {
+    background-color: #3b3e42;
+  }
+
+  body.is-anthracite .page8-group-name,
+  body.is-anthracite .page8-group-name-input {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page8-item-text,
+  body.is-anthracite .page8-item-input {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page8-item-input::placeholder {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page8-item-box {
+    background-color: #3b3e42;
+  }
+
+  /* Segmented control (Görevler/Rutinler) Ayarlar sayfasındaki gibi
+     yarı saydam değil, her zaman opak bir yüzey: normalde beyaz/açık
+     gri, anahtar aktifken antresit koyu gri. Böylece altındaki tema
+     rengi (gradyan) ne olursa olsun yazılar her zaman okunaklı kalır —
+     Ayarlar'daki segmented control zaten koyu bir kartın içinde
+     durduğu için yarı saydam kalabiliyor, ama Sayfa 8'deki bu kutu
+     doğrudan gradyanın üzerinde durduğundan kendi opak zeminine
+     ihtiyacı var. */
+  .settings-segmented.page8-segmented {
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 1.1em;
+    box-shadow: 5px 5px 0px 0px #000;
+  }
+
+  .page8-segmented .settings-segmented-slider {
+    border-radius: 0.85em;
+  }
+
+  .page8-segmented .settings-segmented-option {
+    color: #121212;
+  }
+
+  body.is-anthracite .settings-segmented.page8-segmented {
+    background-color: #3b3e42;
+  }
+
+  body.is-anthracite .page8-segmented .settings-segmented-option {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page8-segmented .settings-segmented-option.is-active {
+    color: #fff;
+  }
+
+  /* Sayfa 9: anahtar aktifken soru takibi kartlarındaki beyaz yüzeyler
+     (ders kartları, tarih etiketi, giriş kutusu, özet çubuğu zemini)
+     de aynı antresit tonuna geçer. Derslerin kendi seçtiği renk (üst
+     şerit, nokta, çubuk dolgusu) JS ile ayarlandığından dokunulmuyor. */
+  .settings-segmented.page9-segmented {
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 1.1em;
+    box-shadow: 5px 5px 0px 0px #000;
+  }
+
+  .page9-segmented .settings-segmented-slider {
+    border-radius: 0.85em;
+  }
+
+  .page9-segmented .settings-segmented-option {
+    color: #121212;
+  }
+
+  body.is-anthracite .settings-segmented.page9-segmented {
+    background-color: #3b3e42;
+  }
+
+  body.is-anthracite .page9-segmented .settings-segmented-option {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-segmented .settings-segmented-option.is-active {
+    color: #fff;
+  }
+
+  body.is-anthracite .page9-date-label {
+    background-color: #3b3e42;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-card {
+    background-color: #3b3e42;
+  }
+
+  body.is-anthracite .page9-subject-card {
+    background-color: #3b3e42;
+  }
+
+  body.is-anthracite .page9-subject-name,
+  body.is-anthracite .page9-subject-name-input {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-subject-badge {
+    background-color: #2b2f4a;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-count-input {
+    background-color: #2b2f4a;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-stepper-btn {
+    background-color: #2b2f4a;
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-summary-title,
+  body.is-anthracite .page9-summary-range-label,
+  body.is-anthracite .page9-summary-total,
+  body.is-anthracite .page9-summary-group-label,
+  body.is-anthracite .page9-summary-row-name,
+  body.is-anthracite .page9-summary-row-count,
+  body.is-anthracite .page9-summary-empty {
+    color: #f2f2f4;
+  }
+
+  body.is-anthracite .page9-summary-bar-track {
+    background-color: #2b2f4a;
+  }
+
+  body.is-anthracite .page9-add-subject-btn.add-task-btn {
+    background-color: #3b3e42;
+    border-color: #000;
+    color: #f2f2f4;
+  }
+
   /* Sayfa 5: anahtar aktifken kronometre kartı ve ondan açılan büyük
      takvim arayüzündeki beyaz yüzeyler de aynı tona geçer. Seçili gün
      (pembe) ve hafta sonu (kırmızı) vurgu renkleri korunuyor. */
@@ -482,6 +628,40 @@
   body.is-anthracite .wrapper {
     --bg-color: #3b3e42;
     --font-color-dark: #f2f2f4;
+  }
+
+  /* Koyu modda (anthracite) basma/aktif durumlarındaki pembe vurgu:
+     yukarıdaki body.is-anthracite kuralları .add-task-btn, .swatch-arrow,
+     .page9-stepper-btn ve .calendar-back-btn/.calendar-nav-btn için
+     background-color'ı antresit tonuna sabitliyor. Bu kurallar
+     (body + iki sınıf) normal :active/.is-pressed kurallarından
+     (tek sınıf + :active) daha spesifik olduğu için açık moddaki
+     pembe basma efektini görünmez kılıyordu. Aşağıdaki kurallar aynı
+     öğeleri hedefleyip :active/.is-pressed pseudo-class'ını da ekleyerek
+     spesifiteyi artırıyor, böylece koyu modda da pembe basma rengi
+     tekrar görünür oluyor. */
+  body.is-anthracite .add-task-btn:active,
+  body.is-anthracite .add-task-btn.is-pressed {
+    background-color: #ff90e8;
+  }
+
+  body.is-anthracite .edit-task-btn.is-active {
+    background-color: #ff90e8;
+  }
+
+  body.is-anthracite .swatch-arrow:active {
+    background: #ff90e8;
+  }
+
+  body.is-anthracite .page9-stepper-btn:active {
+    background-color: #ff90e8;
+  }
+
+  body.is-anthracite .calendar-back-btn:active,
+  body.is-anthracite .calendar-back-btn.is-pressed,
+  body.is-anthracite .calendar-nav-btn:active,
+  body.is-anthracite .calendar-nav-btn.is-pressed {
+    background-color: #ff90e8;
   }
 
   /* Sayfa 1'deki tema değiştirme butonunu dikeyde ortalar */
@@ -1451,6 +1631,686 @@
 
   .wheel-color-close {
     flex-shrink: 0;
+  }
+
+  /* ---------- Sayfa 8: Planlayıcı (Görevler / Rutinler) ----------
+     Sayfa 2'den farklı olarak başlık burada sabit kalmaz: tüm sayfa
+     (başlık + segmented control + kart listesi) tek parça halinde birlikte
+     kayar. Bu yüzden iç içe ayrı bir kaydırma kutusu yok; kaydırma
+     doğrudan #page-8 üzerinde, kartlarla aynı hizada gerçekleşiyor. */
+  #page-8 {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: calc(48px + env(safe-area-inset-top));
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  #page-8::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ---------- Sayfa 9: Soru Takibi ----------
+     Sayfa 8 ile aynı üstte-hizalı, kaydırmalı düzen; kartlar da aynı
+     brüt beyaz dil (kalın siyah çerçeve + katı gölge). */
+  #page-9 {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: calc(48px + env(safe-area-inset-top));
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  #page-9::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Sayfa yatayda ortalanmış kalsın diye (justify-content artık
+     flex-start olduğundan) ölçüsü sınırlı kapsayıcı kendi kendini ortalar. */
+  .page8-wrap {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .page8-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    width: 100%;
+  }
+
+  .page8-subtitle {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--theme-text, #fff);
+    opacity: 0.75;
+    transition: color 0.5s ease;
+    margin-top: -0.6rem;
+  }
+
+  /* Artık bağımsız bir kaydırma kutusu değil; sadece görünürlük
+     (Görevler/Rutinler) burada yönetiliyor, kaydırma #page-8'de. */
+  .page8-view {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .page8-view.is-hidden {
+    display: none;
+  }
+
+  .page8-group-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .page8-group-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 1.1em;
+    box-shadow: 5px 5px 0px 0px #000;
+    overflow: hidden;
+  }
+
+  .page8-group-accent {
+    height: 9px;
+    border-bottom: 3px solid #000;
+    transition: background-color 0.2s ease;
+  }
+
+  .page8-group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 0.8rem 0.6rem;
+  }
+
+  .page8-group-dot {
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    border: 2.5px solid #000;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
+  }
+
+  .page8-group-dot:hover {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+  }
+
+  .page8-group-dot:active {
+    transform: scale(0.9);
+  }
+
+  .page8-group-name-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .page8-group-name {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #121212;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: text;
+  }
+
+  .page8-group-name-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #121212;
+  }
+
+  .page8-group-add-btn {
+    flex-shrink: 0;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.78rem;
+    border-width: 2.5px;
+    box-shadow: 2.5px 2.5px 0px 0px #000;
+  }
+
+  .page8-group-add-btn:hover {
+    box-shadow: 4px 4px 0px 0px #000;
+  }
+
+  .page8-group-add-btn:active,
+  .page8-group-add-btn.is-pressed {
+    box-shadow: 1px 1px 0px 0px #000;
+  }
+
+  .page8-group-delete {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.85rem;
+    border-width: 2.5px;
+    box-shadow: 2px 2px 0px 0px #000;
+  }
+
+  .page8-item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0 0.8rem 0.8rem;
+  }
+
+  .page8-item-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .page8-item-check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    cursor: pointer;
+  }
+
+  .page8-item-check {
+    display: none;
+  }
+
+  .page8-item-box {
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 2.5px solid #000;
+    border-radius: 0.4rem;
+    background: #fff;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 2px 2px 0px 0px #000;
+    transition: background-color 0.18s ease;
+  }
+
+  .page8-item-box::after {
+    content: "✓";
+    font-size: 0.85rem;
+    line-height: 1;
+    font-weight: 900;
+    color: #000;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+  }
+
+  .page8-item-check:checked + .page8-item-box {
+    background: var(--item-color, #ff90e8);
+  }
+
+  .page8-item-check:checked + .page8-item-box::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .page8-item-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #121212;
+    text-decoration-line: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: transparent;
+    transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+  }
+
+  .page8-item-row.is-done .page8-item-text {
+    opacity: 0.5;
+    text-decoration-color: #121212;
+  }
+
+  .page8-item-delete {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.85rem;
+    border-width: 2.5px;
+    box-shadow: 2px 2px 0px 0px #000;
+  }
+
+  .page8-add-item-row {
+    display: flex;
+    align-items: center;
+    padding-top: 0.05rem;
+  }
+
+  .page8-item-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #121212;
+  }
+
+  .page8-item-input::placeholder {
+    color: #121212;
+    opacity: 0.4;
+  }
+
+  .page8-add-group-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ---------- Sayfa 9: Soru Takibi ----------
+     TYT/AYT sekmesi, seçili gün için branş bazlı hızlı soru girişi ve
+     gün/hafta/ay bazında toplam + branş dağılımı özeti. Sayfa 8'in
+     kart dilini (beyaz zemin, 4px siyah çerçeve, katı gölge) ve Sayfa
+     6/7'nin tarih gezinme oklarını (.calendar-nav-btn) yeniden kullanır. */
+  .page9-wrap {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .page9-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 100%;
+  }
+
+  .page9-subtitle {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--theme-text, #fff);
+    opacity: 0.75;
+    transition: color 0.5s ease;
+  }
+
+  .page9-date-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+  }
+
+  .page9-date-label {
+    flex: 1 1 auto;
+    text-align: center;
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 0.85rem;
+    box-shadow: 3px 3px 0px 0px #000;
+    padding: 0.5rem 0.6rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #121212;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .calendar-nav-btn.page9-date-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    box-shadow: 2px 2px 0px 0px #000;
+    transform: none;
+  }
+
+  .page9-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 1.1em;
+    box-shadow: 6px 6px 0px 0px #000;
+    padding: 0.9rem 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .page9-subject-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .page9-subject-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 0.9em;
+    box-shadow: 4px 4px 0px 0px #000;
+    overflow: hidden;
+  }
+
+  .page9-subject-accent {
+    height: 7px;
+    border-bottom: 2.5px solid #000;
+    transition: background-color 0.2s ease;
+  }
+
+  .page9-subject-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.65rem 0.4rem;
+  }
+
+  .page9-subject-dot {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    border: 2.5px solid #000;
+    flex-shrink: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .page9-subject-dot:active {
+    transform: scale(0.9);
+  }
+
+  .page9-subject-name-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .page9-subject-name {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: #121212;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: text;
+  }
+
+  .page9-subject-name-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: #121212;
+  }
+
+  .page9-subject-badge {
+    flex-shrink: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: #fff;
+    background: #121212;
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+  }
+
+  .page9-subject-delete {
+    flex-shrink: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    font-size: 0.8rem;
+    border-width: 2.5px;
+    box-shadow: 2px 2px 0px 0px #000;
+  }
+
+  .page9-subject-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.65rem 0.65rem;
+  }
+
+  .page9-stepper-btn {
+    flex-shrink: 0;
+    width: 1.7rem;
+    height: 1.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #121212;
+    background-color: #f2f2f2;
+    border: 2.5px solid #000;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+
+  .page9-stepper-btn:active {
+    transform: scale(0.92);
+    background-color: #ff90e8;
+  }
+
+  .page9-count-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 3.2rem;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #121212;
+    background-color: #f2f2f2;
+    border: 2.5px solid #000;
+    border-radius: 0.6rem;
+    padding: 0.3rem 0.2rem;
+    -moz-appearance: textfield;
+  }
+
+  .page9-count-input::-webkit-outer-spin-button,
+  .page9-count-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .page9-add-count-btn {
+    flex: 1 1 auto;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
+    border-width: 2.5px;
+    box-shadow: 2.5px 2.5px 0px 0px #000;
+    text-align: center;
+  }
+
+  .page9-add-count-btn:hover {
+    box-shadow: 4px 4px 0px 0px #000;
+  }
+
+  .page9-add-count-btn:active,
+  .page9-add-count-btn.is-pressed {
+    box-shadow: 1px 1px 0px 0px #000;
+  }
+
+  .page9-add-subject-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Özet kartındaki Gün/Hafta/Ay seçici üç seçenekli olduğundan
+     kayan alanın genişliği ikili segmented control'lerden farklıdır. */
+  #page9RangeSegmented .settings-segmented-slider {
+    width: calc(33.333% - 3px);
+  }
+
+  /* ---------- Sayfa 9: Özet kartı ---------- */
+  .page9-summary-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .page9-summary-title {
+    font-family: "Archivo Expanded", "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #121212;
+    opacity: 0.6;
+  }
+
+  .page9-summary-range-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: #121212;
+    opacity: 0.55;
+  }
+
+  .page9-summary-total {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 2.1rem;
+    color: #121212;
+    line-height: 1;
+  }
+
+  .page9-summary-total span {
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0.55;
+  }
+
+  .page9-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .page9-summary-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .page9-summary-group-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: "Archivo Expanded", "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #121212;
+    opacity: 0.55;
+  }
+
+  .page9-summary-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page9-summary-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .page9-summary-row-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #121212;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .page9-summary-row-dot {
+    flex-shrink: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    border: 1.5px solid #000;
+  }
+
+  .page9-summary-row-count {
+    flex-shrink: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #121212;
+  }
+
+  .page9-summary-bar-track {
+    height: 9px;
+    border: 2px solid #000;
+    border-radius: 6px;
+    background: #f2f2f2;
+    overflow: hidden;
+  }
+
+  .page9-summary-bar-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .page9-summary-empty {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #121212;
+    opacity: 0.5;
+    padding: 0.3rem 0;
   }
 
   /* ---------- Sayfa 5: Kronometre ---------- */
@@ -2899,6 +3759,98 @@
     </div>
   </div>
 
+  <!-- Sayfa 8: grup/kategori silme onay pop-up'ı (Ayarlar'daki sıfırlama
+       onayıyla aynı brutalist stil, farklı id'lerle genel amaçlı) -->
+  <div class="settings-confirm-backdrop" id="page8ConfirmBackdrop">
+    <div class="settings-confirm-card">
+      <span class="settings-confirm-title" id="page8ConfirmTitle">Emin misin?</span>
+      <span class="settings-confirm-desc" id="page8ConfirmDesc">Bu grup ve içindeki tüm öğeler kalıcı olarak silinecek.</span>
+      <div class="settings-confirm-actions">
+        <button type="button" class="settings-confirm-cancel" id="page8ConfirmCancel">Vazgeç</button>
+        <button type="button" class="settings-confirm-confirm" id="page8ConfirmConfirm">Evet, sil</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="page" id="page-8">
+    <div class="page8-wrap">
+      <div class="page8-header">
+        <h1>Planlayıcı</h1>
+        <span class="page8-subtitle">Kategorilere ve rutinlere ayır, renklendir</span>
+        <div class="settings-segmented page8-segmented" id="page8Segmented">
+          <div class="settings-segmented-slider" id="page8SegmentedSlider"></div>
+          <button type="button" class="settings-segmented-option is-active" data-value="tasks">Görevler</button>
+          <button type="button" class="settings-segmented-option" data-value="routines">Rutinler</button>
+        </div>
+      </div>
+
+      <div class="page8-view" id="page8TasksView">
+        <div class="page8-group-list" id="page8CategoryList"></div>
+        <button type="button" class="add-task-btn page8-add-group-btn" id="page8AddCategoryBtn">+ Kategori</button>
+      </div>
+
+      <div class="page8-view is-hidden" id="page8RoutinesView">
+        <div class="page8-group-list" id="page8RoutineGroupList"></div>
+        <button type="button" class="add-task-btn page8-add-group-btn" id="page8AddRoutineGroupBtn">+ Rutin Grubu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sayfa 9: Soru Takibi. TYT/AYT sekmesinden ders seçilip günlük
+       çözülen soru sayısı girilir; alttaki özet kartı gün/hafta/ay
+       bazında hem genel toplamı hem branş dağılımını gösterir. -->
+  <section class="page" id="page-9">
+    <div class="page9-wrap">
+      <div class="page9-header">
+        <h1>Soru Takibi</h1>
+        <span class="page9-subtitle">Çözdüğün soruları branşına göre kaydet</span>
+      </div>
+
+      <div class="page9-date-row">
+        <button type="button" class="calendar-nav-btn page9-date-btn" id="page9PrevDayBtn" aria-label="Önceki gün">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="page9-date-label" id="page9DateLabel">Bugün</span>
+        <button type="button" class="calendar-nav-btn page9-date-btn" id="page9NextDayBtn" aria-label="Sonraki gün">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="page9-card">
+        <div class="settings-segmented page9-segmented" id="page9TrackSegmented">
+          <div class="settings-segmented-slider" id="page9TrackSlider"></div>
+          <button type="button" class="settings-segmented-option is-active" data-value="tyt">TYT</button>
+          <button type="button" class="settings-segmented-option" data-value="ayt">AYT</button>
+        </div>
+        <div class="page9-subject-list" id="page9SubjectList"></div>
+        <button type="button" class="add-task-btn page9-add-subject-btn" id="page9AddSubjectBtn">+ Ders Ekle</button>
+      </div>
+
+      <div class="page9-card page9-summary-card">
+        <div class="page9-summary-header">
+          <span class="page9-summary-title">Özet</span>
+          <div class="settings-segmented page9-segmented" id="page9RangeSegmented">
+            <div class="settings-segmented-slider" id="page9RangeSlider"></div>
+            <button type="button" class="settings-segmented-option is-active" data-value="day">Gün</button>
+            <button type="button" class="settings-segmented-option" data-value="week">Hafta</button>
+            <button type="button" class="settings-segmented-option" data-value="month">Ay</button>
+          </div>
+          <span class="page9-summary-range-label" id="page9RangeLabel"></span>
+        </div>
+        <div class="page9-summary-total" id="page9SummaryTotal">0 <span>soru</span></div>
+        <div class="page9-summary-list" id="page9SummaryList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sayfa 10: şimdilik boş, içerik sonra eklenecek. -->
+  <section class="page" id="page-10">
+  </section>
+
   <!-- Ayarlar > Desenler: nav bar'ın dışında, Sayfa 6/7 gibi yalnızca
        "Desenler" satırıyla açılan bağımsız bir alt sayfa. Katalog kartı
        Sayfa 3'teki renk paleti kartıyla (.theme-swatch-card ve alt
@@ -2977,6 +3929,18 @@
     <div class="option">
       <input class="nav-input" type="radio" name="nav" value="page-settings">
       <div class="nav-btn"><span class="nav-span">7</span></div>
+    </div>
+    <div class="option">
+      <input class="nav-input" type="radio" name="nav" value="page-8">
+      <div class="nav-btn"><span class="nav-span">8</span></div>
+    </div>
+    <div class="option">
+      <input class="nav-input" type="radio" name="nav" value="page-9">
+      <div class="nav-btn"><span class="nav-span">9</span></div>
+    </div>
+    <div class="option">
+      <input class="nav-input" type="radio" name="nav" value="page-10">
+      <div class="nav-btn"><span class="nav-span">10</span></div>
     </div>
   </div>
 </nav>
@@ -3837,7 +4801,6 @@
   const saveWheelState = () => {
     saveAppState({ wheel: { options: wheelOptions, colors: wheelOptionColors } });
   };
-  let wheelColorEditIndex = null;
 
   const colorForIndex = (i) => wheelOptionColors[i] || WHEEL_PALETTE[i % WHEEL_PALETTE.length];
 
@@ -3998,20 +4961,26 @@
 
   // Seçeneğin rengini değiştirme pop-up'ı: 8 renklik sabit paleti gösterir,
   // tıklanan seçeneğin o an kullandığı renk tikle işaretlenir.
+  // Genel amaçlı hale getirildi: sadece çark seçenekleri değil, Sayfa 8'deki
+  // kategori/rutin grubu renklerini seçmek için de aynı pop-up kullanılıyor.
   const wheelColorBackdrop = document.getElementById('wheelColorBackdrop');
   const wheelColorGrid = document.getElementById('wheelColorGrid');
   const wheelColorSubtitle = document.getElementById('wheelColorSubtitle');
   const wheelColorClose = document.getElementById('wheelColorClose');
 
-  const closeWheelColorPicker = () => {
+  let colorPickerOnSelect = null;
+
+  const closeColorPicker = () => {
     wheelColorBackdrop.classList.remove('is-open');
-    wheelColorEditIndex = null;
+    colorPickerOnSelect = null;
   };
 
-  const openWheelColorPicker = (index) => {
-    if (isSpinning) return;
-    wheelColorEditIndex = index;
-    wheelColorSubtitle.textContent = wheelOptions[index];
+  // subtitle: pop-up'ta gösterilecek küçük açıklama (örn. seçenek/kategori adı)
+  // currentColor: şu an seçili olan renk (tik işareti bunun üzerine konur)
+  // onSelect(color): kullanıcı bir renge tıklayınca çağrılır
+  const openColorPicker = (subtitle, currentColor, onSelect) => {
+    colorPickerOnSelect = onSelect;
+    wheelColorSubtitle.textContent = subtitle;
 
     wheelColorGrid.innerHTML = '';
     WHEEL_PALETTE.forEach((color) => {
@@ -4020,7 +4989,7 @@
       swatch.className = 'wheel-color-swatch';
       swatch.style.background = color;
       swatch.setAttribute('aria-label', color);
-      if (colorForIndex(index).toLowerCase() === color.toLowerCase()) {
+      if (currentColor && currentColor.toLowerCase() === color.toLowerCase()) {
         swatch.classList.add('is-selected');
       }
 
@@ -4030,12 +4999,8 @@
       swatch.appendChild(check);
 
       swatch.addEventListener('click', () => {
-        if (wheelColorEditIndex === null) return;
-        wheelOptionColors[wheelColorEditIndex] = color;
-        renderWheelOptions();
-        buildWheel();
-        saveWheelState();
-        closeWheelColorPicker();
+        if (colorPickerOnSelect) colorPickerOnSelect(color);
+        closeColorPicker();
       });
 
       wheelColorGrid.appendChild(swatch);
@@ -4044,13 +5009,25 @@
     wheelColorBackdrop.classList.add('is-open');
   };
 
-  wheelColorClose.addEventListener('click', closeWheelColorPicker);
+  // Çark seçeneği için: mevcut davranışı aynen korur, sadece artık genel
+  // openColorPicker fonksiyonunu çağırıyor.
+  const openWheelColorPicker = (index) => {
+    if (isSpinning) return;
+    openColorPicker(wheelOptions[index], colorForIndex(index), (color) => {
+      wheelOptionColors[index] = color;
+      renderWheelOptions();
+      buildWheel();
+      saveWheelState();
+    });
+  };
+
+  wheelColorClose.addEventListener('click', closeColorPicker);
   wheelColorBackdrop.addEventListener('click', (e) => {
-    if (e.target === wheelColorBackdrop) closeWheelColorPicker();
+    if (e.target === wheelColorBackdrop) closeColorPicker();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && wheelColorBackdrop.classList.contains('is-open')) {
-      closeWheelColorPicker();
+      closeColorPicker();
     }
   });
 
@@ -5130,6 +6107,831 @@
 
   if (settingsPatternsLink) settingsPatternsLink.addEventListener('click', openPatternsPage);
   if (patternsBackBtn) patternsBackBtn.addEventListener('click', closePatternsPage);
+</script>
+
+<script>
+  // ---------- Sayfa 8: Planlayıcı (Görevler / Rutinler) ----------
+  // Kategorilere ayrılabilen bir yapılacaklar listesi ve her gün otomatik
+  // sıfırlanan, gruplanabilir rutinler. Her iki grup türü de Sayfa 4'te
+  // (Karar Çarkı) hazırlanan "Renk seç" pop-up'ını (openColorPicker,
+  // WHEEL_PALETTE) yeniden kullanarak renklendirilebiliyor.
+
+  // Basit, çakışma ihtimali düşük benzersiz kimlik üretici.
+  const page8GenId = () => 'p8-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+  // Bugünün tarihini "YYYY-M-D" biçiminde döndürür; rutinlerin son
+  // sıfırlandığı günü karşılaştırmak için kullanılır.
+  const page8TodayStr = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+  };
+
+  const PAGE8_DEFAULT_STATE = {
+    categories: [
+      {
+        id: page8GenId(),
+        name: 'Genel',
+        color: WHEEL_PALETTE[0],
+        tasks: [{ id: page8GenId(), text: 'İlk görevini ekle', done: false }]
+      }
+    ],
+    routineGroups: [
+      {
+        id: page8GenId(),
+        name: 'Günlük',
+        color: WHEEL_PALETTE[2],
+        routines: [
+          { id: page8GenId(), text: 'Su iç', done: false },
+          { id: page8GenId(), text: '10 dakika yürü', done: false }
+        ]
+      }
+    ],
+    routinesResetDate: null
+  };
+
+  const savedPage8 = APP_STATE.page8;
+  const page8State = (savedPage8 && Array.isArray(savedPage8.categories) && Array.isArray(savedPage8.routineGroups))
+    ? savedPage8
+    : JSON.parse(JSON.stringify(PAGE8_DEFAULT_STATE));
+
+  // Gün değiştiyse tüm rutinlerin işaretini sıfırla (kategori görevleri
+  // kalıcıdır, sadece rutinler her gün yeniden başlar).
+  if (page8State.routinesResetDate !== page8TodayStr()) {
+    page8State.routineGroups.forEach((group) => {
+      group.routines.forEach((routine) => { routine.done = false; });
+    });
+    page8State.routinesResetDate = page8TodayStr();
+  }
+
+  const savePage8State = () => saveAppState({ page8: page8State });
+  savePage8State(); // ilk yükleme/sıfırlama sonrası durumu hemen kaydet
+
+  const page8NextColor = (count) => WHEEL_PALETTE[count % WHEEL_PALETTE.length];
+
+  // Tek bir görev/rutin satırını (checkbox + metin + sil) oluşturur.
+  const createPage8ItemRow = (item, accentColor, onToggle, onDelete) => {
+    const row = document.createElement('div');
+    row.className = 'page8-item-row' + (item.done ? ' is-done' : '');
+
+    const label = document.createElement('label');
+    label.className = 'page8-item-check-label';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'page8-item-check';
+    checkbox.checked = !!item.done;
+    checkbox.style.setProperty('--item-color', accentColor);
+
+    const box = document.createElement('span');
+    box.className = 'page8-item-box';
+    box.style.setProperty('--item-color', accentColor);
+
+    const text = document.createElement('span');
+    text.className = 'page8-item-text';
+    text.textContent = item.text;
+
+    checkbox.addEventListener('change', () => {
+      item.done = checkbox.checked;
+      row.classList.toggle('is-done', item.done);
+      onToggle();
+    });
+
+    label.appendChild(checkbox);
+    label.appendChild(box);
+    label.appendChild(text);
+
+    const del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'delete-btn page8-item-delete';
+    del.setAttribute('aria-label', 'Sil');
+    del.textContent = '×';
+    del.addEventListener('click', onDelete);
+
+    row.appendChild(label);
+    row.appendChild(del);
+    row._page8Box = box;
+    row._page8Checkbox = checkbox;
+    return row;
+  };
+
+  // Bir kategori ya da rutin grubu kartını oluşturur. `itemsKey` grubun
+  // içindeki liste alanının adıdır ('tasks' ya da 'routines').
+  const createPage8GroupCard = (group, itemsKey, opts) => {
+    const card = document.createElement('div');
+    card.className = 'page8-group-card';
+
+    const accent = document.createElement('div');
+    accent.className = 'page8-group-accent';
+    accent.style.background = group.color;
+
+    const header = document.createElement('div');
+    header.className = 'page8-group-header';
+
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'page8-group-dot';
+    dot.style.background = group.color;
+    dot.setAttribute('aria-label', `"${group.name}" rengini değiştir`);
+
+    const nameWrap = document.createElement('div');
+    nameWrap.className = 'page8-group-name-wrap';
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'page8-group-name';
+    nameSpan.textContent = group.name;
+    nameWrap.appendChild(nameSpan);
+
+    const itemList = document.createElement('div');
+    itemList.className = 'page8-item-list';
+
+    dot.addEventListener('click', () => {
+      openColorPicker(group.name, group.color, (color) => {
+        group.color = color;
+        accent.style.background = color;
+        dot.style.background = color;
+        itemList.querySelectorAll('.page8-item-box, .page8-item-check').forEach((el) => {
+          el.style.setProperty('--item-color', color);
+        });
+        opts.onChange();
+      });
+    });
+
+    const startRename = () => {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'page8-group-name-input';
+      input.value = group.name;
+      input.maxLength = 24;
+      nameWrap.innerHTML = '';
+      nameWrap.appendChild(input);
+      input.focus();
+      input.select();
+
+      const commit = () => {
+        const value = input.value.trim();
+        if (value) group.name = value;
+        nameWrap.innerHTML = '';
+        nameSpan.textContent = group.name;
+        nameWrap.appendChild(nameSpan);
+        dot.setAttribute('aria-label', `"${group.name}" rengini değiştir`);
+        opts.onChange();
+      };
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        else if (e.key === 'Escape') { input.value = group.name; input.blur(); }
+      });
+      input.addEventListener('blur', commit, { once: true });
+    };
+    nameSpan.addEventListener('click', startRename);
+
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'add-task-btn page8-group-add-btn';
+    addBtn.textContent = opts.itemLabel;
+
+    const delGroupBtn = document.createElement('button');
+    delGroupBtn.type = 'button';
+    delGroupBtn.className = 'delete-btn page8-group-delete';
+    delGroupBtn.setAttribute('aria-label', `"${group.name}" grubunu sil`);
+    delGroupBtn.textContent = '×';
+    delGroupBtn.addEventListener('click', opts.onDeleteGroup);
+
+    header.appendChild(dot);
+    header.appendChild(nameWrap);
+    header.appendChild(addBtn);
+    header.appendChild(delGroupBtn);
+
+    const renderItems = () => {
+      itemList.innerHTML = '';
+      group[itemsKey].forEach((item) => {
+        const row = createPage8ItemRow(
+          item,
+          group.color,
+          () => opts.onChange(),
+          () => {
+            group[itemsKey] = group[itemsKey].filter((it) => it.id !== item.id);
+            renderItems();
+            opts.onChange();
+          }
+        );
+        itemList.appendChild(row);
+      });
+    };
+    renderItems();
+
+    const addItemRow = () => {
+      const row = document.createElement('div');
+      row.className = 'page8-add-item-row';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'page8-item-input';
+      input.placeholder = 'Yeni ekle...';
+      input.maxLength = 40;
+      row.appendChild(input);
+      itemList.appendChild(row);
+      input.focus();
+
+      const commit = () => {
+        const value = input.value.trim();
+        row.remove();
+        if (value) {
+          group[itemsKey].push({ id: page8GenId(), text: value, done: false });
+          renderItems();
+          opts.onChange();
+        }
+      };
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        else if (e.key === 'Escape') { input.value = ''; input.blur(); }
+      });
+      input.addEventListener('blur', commit, { once: true });
+    };
+    addBtn.addEventListener('click', addItemRow);
+
+    card.appendChild(accent);
+    card.appendChild(header);
+    card.appendChild(itemList);
+    return card;
+  };
+
+  const page8CategoryList = document.getElementById('page8CategoryList');
+  const page8RoutineGroupList = document.getElementById('page8RoutineGroupList');
+  const page8AddCategoryBtn = document.getElementById('page8AddCategoryBtn');
+  const page8AddRoutineGroupBtn = document.getElementById('page8AddRoutineGroupBtn');
+
+  // ---- Grup/kategori silme onayı: Ayarlar'daki "Tüm verileri sıfırla"
+  //      onayıyla aynı brutalist pop-up, farklı id'lerle genel amaçlı
+  //      kullanılıyor. Açıldığında hangi grubun silineceğini hatırlar,
+  //      "Evet, sil" ile onaylanınca ilgili callback'i çalıştırır. ----
+  const page8ConfirmBackdrop = document.getElementById('page8ConfirmBackdrop');
+  const page8ConfirmTitle = document.getElementById('page8ConfirmTitle');
+  const page8ConfirmDesc = document.getElementById('page8ConfirmDesc');
+  const page8ConfirmCancel = document.getElementById('page8ConfirmCancel');
+  const page8ConfirmConfirm = document.getElementById('page8ConfirmConfirm');
+  let page8PendingDelete = null;
+
+  const closePage8Confirm = () => {
+    page8ConfirmBackdrop.classList.remove('is-open');
+    page8PendingDelete = null;
+  };
+
+  const openPage8Confirm = (groupName, onConfirm) => {
+    page8ConfirmTitle.textContent = 'Emin misin?';
+    page8ConfirmDesc.textContent = `"${groupName}" ve içindeki tüm öğeler kalıcı olarak silinecek.`;
+    page8PendingDelete = onConfirm;
+    page8ConfirmBackdrop.classList.add('is-open');
+  };
+
+  if (page8ConfirmCancel) page8ConfirmCancel.addEventListener('click', closePage8Confirm);
+  if (page8ConfirmBackdrop) {
+    page8ConfirmBackdrop.addEventListener('click', (e) => {
+      if (e.target === page8ConfirmBackdrop) closePage8Confirm();
+    });
+  }
+  if (page8ConfirmConfirm) {
+    page8ConfirmConfirm.addEventListener('click', () => {
+      const action = page8PendingDelete;
+      closePage8Confirm();
+      if (typeof action === 'function') action();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && page8ConfirmBackdrop && page8ConfirmBackdrop.classList.contains('is-open')) {
+      closePage8Confirm();
+    }
+  });
+
+  const renderPage8Categories = () => {
+    page8CategoryList.innerHTML = '';
+    page8State.categories.forEach((cat) => {
+      const card = createPage8GroupCard(cat, 'tasks', {
+        itemLabel: '+ Görev',
+        onChange: savePage8State,
+        onDeleteGroup: () => {
+          openPage8Confirm(cat.name, () => {
+            page8State.categories = page8State.categories.filter((c) => c.id !== cat.id);
+            renderPage8Categories();
+            savePage8State();
+          });
+        }
+      });
+      page8CategoryList.appendChild(card);
+    });
+  };
+
+  const renderPage8RoutineGroups = () => {
+    page8RoutineGroupList.innerHTML = '';
+    page8State.routineGroups.forEach((grp) => {
+      const card = createPage8GroupCard(grp, 'routines', {
+        itemLabel: '+ Rutin',
+        onChange: savePage8State,
+        onDeleteGroup: () => {
+          openPage8Confirm(grp.name, () => {
+            page8State.routineGroups = page8State.routineGroups.filter((g) => g.id !== grp.id);
+            renderPage8RoutineGroups();
+            savePage8State();
+          });
+        }
+      });
+      page8RoutineGroupList.appendChild(card);
+    });
+  };
+
+  renderPage8Categories();
+  renderPage8RoutineGroups();
+
+  page8AddCategoryBtn.addEventListener('click', () => {
+    const cat = {
+      id: page8GenId(),
+      name: `Kategori ${page8State.categories.length + 1}`,
+      color: page8NextColor(page8State.categories.length),
+      tasks: []
+    };
+    page8State.categories.push(cat);
+    renderPage8Categories();
+    savePage8State();
+    const nameEl = page8CategoryList.lastElementChild.querySelector('.page8-group-name');
+    if (nameEl) nameEl.click();
+  });
+
+  page8AddRoutineGroupBtn.addEventListener('click', () => {
+    const grp = {
+      id: page8GenId(),
+      name: `Rutin Grubu ${page8State.routineGroups.length + 1}`,
+      color: page8NextColor(page8State.routineGroups.length),
+      routines: []
+    };
+    page8State.routineGroups.push(grp);
+    renderPage8RoutineGroups();
+    savePage8State();
+    const nameEl = page8RoutineGroupList.lastElementChild.querySelector('.page8-group-name');
+    if (nameEl) nameEl.click();
+  });
+
+  // ---- Görevler / Rutinler sekme geçişi (Ayarlar'daki hafta başlangıcı
+  //      segmented control'üyle birebir aynı mantık). ----
+  const page8Segmented = document.getElementById('page8Segmented');
+  const page8SegmentedSlider = document.getElementById('page8SegmentedSlider');
+  const page8TasksView = document.getElementById('page8TasksView');
+  const page8RoutinesView = document.getElementById('page8RoutinesView');
+  const page8SegOptions = Array.from(page8Segmented.querySelectorAll('.settings-segmented-option'));
+
+  const setPage8View = (value) => {
+    page8SegmentedSlider.style.transform = value === 'routines' ? 'translateX(100%)' : 'translateX(0)';
+    page8SegOptions.forEach((btn) => btn.classList.toggle('is-active', btn.dataset.value === value));
+    page8TasksView.classList.toggle('is-hidden', value !== 'tasks');
+    page8RoutinesView.classList.toggle('is-hidden', value !== 'routines');
+  };
+
+  page8SegOptions.forEach((btn) => btn.addEventListener('click', () => setPage8View(btn.dataset.value)));
+  setPage8View('tasks');
+</script>
+
+<script>
+  // ---------- Sayfa 9: Soru Takibi ----------
+  // YKS müfredatına uygun TYT ve AYT (Sayısal) dersleri için günlük
+  // çözülen soru sayısı kaydı tutar; gün/hafta/ay bazında hem genel
+  // toplamı hem branş dağılımını gösterir. Sayfa 8'in grup/renk/silme
+  // onayı bileşenlerini (WHEEL_PALETTE, openColorPicker, openPage8Confirm)
+  // yeniden kullanır, kendi verisini APP_STATE.page9 altında saklar.
+
+  const page9GenId = () => 'p9-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+  const page9Pad2 = (n) => String(n).padStart(2, '0');
+  const page9DateKey = (d) => `${d.getFullYear()}-${page9Pad2(d.getMonth() + 1)}-${page9Pad2(d.getDate())}`;
+  const page9StartOfDay = (d) => { const n = new Date(d); n.setHours(0, 0, 0, 0); return n; };
+
+  // Gerçek YKS sayısal müfredatı: TYT'de 9 branş, AYT'de sayısala özgü 4 branş.
+  const TYT_DEFAULT_SUBJECTS = ['Türkçe', 'Tarih', 'Coğrafya', 'Felsefe', 'Din Kültürü ve Ahlak Bilgisi', 'Matematik', 'Fizik', 'Kimya', 'Biyoloji'];
+  const AYT_DEFAULT_SUBJECTS = ['Matematik', 'Fizik', 'Kimya', 'Biyoloji'];
+
+  const page9BuildDefaultSubjects = (names) => names.map((name, i) => ({
+    id: page9GenId(),
+    name,
+    color: WHEEL_PALETTE[i % WHEEL_PALETTE.length]
+  }));
+
+  const PAGE9_DEFAULT_STATE = () => ({
+    subjects: {
+      tyt: page9BuildDefaultSubjects(TYT_DEFAULT_SUBJECTS),
+      ayt: page9BuildDefaultSubjects(AYT_DEFAULT_SUBJECTS)
+    },
+    logs: [] // { id, date:'YYYY-MM-DD', track:'tyt'|'ayt', subjectId, count, ts }
+  });
+
+  const savedPage9 = APP_STATE.page9;
+  const page9State = (savedPage9 && savedPage9.subjects
+    && Array.isArray(savedPage9.subjects.tyt) && Array.isArray(savedPage9.subjects.ayt)
+    && Array.isArray(savedPage9.logs))
+    ? savedPage9
+    : PAGE9_DEFAULT_STATE();
+
+  const savePage9State = () => saveAppState({ page9: page9State });
+  savePage9State(); // ilk yükleme/sıfırlama sonrası durumu hemen kaydet
+
+  let page9Track = 'tyt';
+  let page9Range = 'day';
+  let page9SelectedDate = page9StartOfDay(new Date());
+
+  const page9TrackSegmented = document.getElementById('page9TrackSegmented');
+  const page9TrackSlider = document.getElementById('page9TrackSlider');
+  const page9TrackOptions = Array.from(page9TrackSegmented.querySelectorAll('.settings-segmented-option'));
+  const page9SubjectList = document.getElementById('page9SubjectList');
+  const page9AddSubjectBtn = document.getElementById('page9AddSubjectBtn');
+  const page9DateLabel = document.getElementById('page9DateLabel');
+  const page9PrevDayBtn = document.getElementById('page9PrevDayBtn');
+  const page9NextDayBtn = document.getElementById('page9NextDayBtn');
+  const page9RangeSegmented = document.getElementById('page9RangeSegmented');
+  const page9RangeSlider = document.getElementById('page9RangeSlider');
+  const page9RangeOptions = Array.from(page9RangeSegmented.querySelectorAll('.settings-segmented-option'));
+  const page9RangeLabel = document.getElementById('page9RangeLabel');
+  const page9SummaryTotal = document.getElementById('page9SummaryTotal');
+  const page9SummaryList = document.getElementById('page9SummaryList');
+
+  const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+  const PAGE9_TRACK_LABELS = { tyt: 'TYT', ayt: 'AYT' };
+
+  const page9FormatDateLabel = (d) => {
+    const today = page9StartOfDay(new Date());
+    const diffDays = Math.round((d - today) / 86400000);
+    const dayMonth = `${d.getDate()} ${MONTHS_TR[d.getMonth()]}`;
+    if (diffDays === 0) return `Bugün · ${dayMonth}`;
+    if (diffDays === -1) return `Dün · ${dayMonth}`;
+    return dayMonth;
+  };
+
+  const page9RenderDateRow = () => {
+    page9DateLabel.textContent = page9FormatDateLabel(page9SelectedDate);
+    const today = page9StartOfDay(new Date());
+    page9NextDayBtn.disabled = page9SelectedDate.getTime() >= today.getTime();
+  };
+
+  // Seçili tarihte, verilen branş için o ana kadar girilmiş toplam soru sayısı.
+  const page9SelectedCountFor = (subjectId) => {
+    const key = page9DateKey(page9SelectedDate);
+    return page9State.logs.reduce((sum, log) => (
+      log.date === key && log.subjectId === subjectId ? sum + log.count : sum
+    ), 0);
+  };
+
+  const page9NextColor = (track) => WHEEL_PALETTE[page9State.subjects[track].length % WHEEL_PALETTE.length];
+
+  const page9AddLog = (subjectId, count) => {
+    if (!count || count <= 0) return;
+    page9State.logs.push({
+      id: page9GenId(),
+      date: page9DateKey(page9SelectedDate),
+      track: page9Track,
+      subjectId,
+      count,
+      ts: Date.now()
+    });
+    savePage9State();
+    renderPage9SubjectList();
+    renderPage9Summary();
+  };
+
+  // Tek bir ders kartı: renk noktası (rengi değiştirir), ad (dokununca
+  // yeniden adlandırılır), seçili gündeki toplam rozet, silme butonu ve
+  // altında hızlı soru girişi (eksi/artı, sayı kutusu, Ekle butonu).
+  const createPage9SubjectCard = (subject) => {
+    const card = document.createElement('div');
+    card.className = 'page9-subject-card';
+
+    const accent = document.createElement('div');
+    accent.className = 'page9-subject-accent';
+    accent.style.background = subject.color;
+
+    const top = document.createElement('div');
+    top.className = 'page9-subject-top';
+
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'page9-subject-dot';
+    dot.style.background = subject.color;
+    dot.setAttribute('aria-label', `"${subject.name}" rengini değiştir`);
+    dot.addEventListener('click', () => {
+      openColorPicker(subject.name, subject.color, (color) => {
+        subject.color = color;
+        accent.style.background = color;
+        dot.style.background = color;
+        savePage9State();
+        renderPage9Summary();
+      });
+    });
+
+    const nameWrap = document.createElement('div');
+    nameWrap.className = 'page9-subject-name-wrap';
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'page9-subject-name';
+    nameSpan.textContent = subject.name;
+    nameWrap.appendChild(nameSpan);
+
+    const startRename = () => {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'page9-subject-name-input';
+      input.value = subject.name;
+      input.maxLength = 28;
+      nameWrap.innerHTML = '';
+      nameWrap.appendChild(input);
+      input.focus();
+      input.select();
+
+      const commit = () => {
+        const value = input.value.trim();
+        if (value) subject.name = value;
+        nameWrap.innerHTML = '';
+        nameSpan.textContent = subject.name;
+        nameWrap.appendChild(nameSpan);
+        dot.setAttribute('aria-label', `"${subject.name}" rengini değiştir`);
+        savePage9State();
+        renderPage9Summary();
+      };
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        else if (e.key === 'Escape') { input.value = subject.name; input.blur(); }
+      });
+      input.addEventListener('blur', commit, { once: true });
+    };
+    nameSpan.addEventListener('click', startRename);
+
+    const badge = document.createElement('span');
+    badge.className = 'page9-subject-badge';
+    badge.textContent = `${page9SelectedCountFor(subject.id)} soru`;
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'delete-btn page9-subject-delete';
+    delBtn.textContent = '×';
+    delBtn.setAttribute('aria-label', `"${subject.name}" dersini sil`);
+    delBtn.addEventListener('click', () => {
+      openPage8Confirm(subject.name, () => {
+        const list = page9State.subjects[page9Track];
+        page9State.subjects[page9Track] = list.filter((s) => s.id !== subject.id);
+        page9State.logs = page9State.logs.filter((log) => log.subjectId !== subject.id);
+        savePage9State();
+        renderPage9SubjectList();
+        renderPage9Summary();
+      });
+    });
+
+    top.appendChild(dot);
+    top.appendChild(nameWrap);
+    top.appendChild(badge);
+    top.appendChild(delBtn);
+
+    const controls = document.createElement('div');
+    controls.className = 'page9-subject-controls';
+
+    const minusBtn = document.createElement('button');
+    minusBtn.type = 'button';
+    minusBtn.className = 'page9-stepper-btn';
+    minusBtn.textContent = '–';
+    minusBtn.setAttribute('aria-label', 'Sayıyı azalt');
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.inputMode = 'numeric';
+    input.className = 'page9-count-input';
+    input.min = '0';
+    input.max = '999';
+    input.value = '10';
+
+    const plusBtn = document.createElement('button');
+    plusBtn.type = 'button';
+    plusBtn.className = 'page9-stepper-btn';
+    plusBtn.textContent = '+';
+    plusBtn.setAttribute('aria-label', 'Sayıyı artır');
+
+    minusBtn.addEventListener('click', () => {
+      const v = Math.max(0, (parseInt(input.value, 10) || 0) - 5);
+      input.value = String(v);
+    });
+    plusBtn.addEventListener('click', () => {
+      const v = Math.min(999, (parseInt(input.value, 10) || 0) + 5);
+      input.value = String(v);
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'add-task-btn page9-add-count-btn';
+    addBtn.textContent = 'Ekle';
+    addBtn.addEventListener('click', () => {
+      const count = parseInt(input.value, 10) || 0;
+      page9AddLog(subject.id, count);
+    });
+
+    controls.appendChild(minusBtn);
+    controls.appendChild(input);
+    controls.appendChild(plusBtn);
+    controls.appendChild(addBtn);
+
+    const body = document.createElement('div');
+    body.appendChild(top);
+    body.appendChild(controls);
+
+    card.appendChild(accent);
+    card.appendChild(body);
+    return card;
+  };
+
+  const renderPage9SubjectList = () => {
+    page9SubjectList.innerHTML = '';
+    const subjects = page9State.subjects[page9Track];
+    if (!subjects.length) {
+      const empty = document.createElement('div');
+      empty.className = 'page9-summary-empty';
+      empty.textContent = 'Henüz ders eklenmedi.';
+      page9SubjectList.appendChild(empty);
+      return;
+    }
+    subjects.forEach((subject) => {
+      page9SubjectList.appendChild(createPage9SubjectCard(subject));
+    });
+  };
+
+  page9AddSubjectBtn.addEventListener('click', () => {
+    const subject = { id: page9GenId(), name: 'Yeni Ders', color: page9NextColor(page9Track) };
+    page9State.subjects[page9Track].push(subject);
+    savePage9State();
+    renderPage9SubjectList();
+    const nameEl = page9SubjectList.lastElementChild.querySelector('.page9-subject-name');
+    if (nameEl) nameEl.click();
+  });
+
+  // ---- TYT/AYT sekmesi ----
+  const setPage9Track = (value) => {
+    page9Track = value;
+    page9TrackSlider.style.transform = value === 'ayt' ? 'translateX(100%)' : 'translateX(0)';
+    page9TrackOptions.forEach((btn) => btn.classList.toggle('is-active', btn.dataset.value === value));
+    renderPage9SubjectList();
+  };
+  page9TrackOptions.forEach((btn) => btn.addEventListener('click', () => setPage9Track(btn.dataset.value)));
+
+  // ---- Tarih gezinme (bugünden ileriye gidilemez) ----
+  const shiftPage9Date = (days) => {
+    const next = page9StartOfDay(new Date(page9SelectedDate));
+    next.setDate(next.getDate() + days);
+    const today = page9StartOfDay(new Date());
+    if (next.getTime() > today.getTime()) return;
+    page9SelectedDate = next;
+    page9RenderDateRow();
+    renderPage9SubjectList();
+    if (page9Range === 'day') renderPage9Summary();
+  };
+  page9PrevDayBtn.addEventListener('click', () => shiftPage9Date(-1));
+  page9NextDayBtn.addEventListener('click', () => shiftPage9Date(1));
+
+  // ---- Özet: Gün/Hafta/Ay sekmesi ----
+  const setPage9Range = (value) => {
+    page9Range = value;
+    const idx = page9RangeOptions.findIndex((btn) => btn.dataset.value === value);
+    page9RangeSlider.style.transform = `translateX(${idx * 100}%)`;
+    page9RangeOptions.forEach((btn) => btn.classList.toggle('is-active', btn.dataset.value === value));
+    renderPage9Summary();
+  };
+  page9RangeOptions.forEach((btn) => btn.addEventListener('click', () => setPage9Range(btn.dataset.value)));
+
+  // Ayarlar'daki "Hafta başlangıcı" tercihini (Pazartesi/Pazar) kullanır,
+  // böylece haftalık özet takvimdeki hafta tanımıyla tutarlı kalır.
+  const page9GetWeekStart = (date) => {
+    const startsSun = APP_STATE.weekStart === 'sun';
+    const day = date.getDay();
+    const diff = startsSun ? day : (day === 0 ? 6 : day - 1);
+    const start = page9StartOfDay(date);
+    start.setDate(start.getDate() - diff);
+    return start;
+  };
+
+  const page9GetRangeBounds = () => {
+    const d = page9SelectedDate;
+    if (page9Range === 'day') return { start: d, end: d };
+    if (page9Range === 'week') {
+      const start = page9GetWeekStart(d);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 6);
+      return { start, end };
+    }
+    const start = new Date(d.getFullYear(), d.getMonth(), 1);
+    const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    return { start, end };
+  };
+
+  const page9RangeLabelText = () => {
+    const { start, end } = page9GetRangeBounds();
+    if (page9Range === 'day') return page9FormatDateLabel(start);
+    if (page9Range === 'week') {
+      const sameMonth = start.getMonth() === end.getMonth();
+      const startStr = sameMonth ? `${start.getDate()}` : `${start.getDate()} ${MONTHS_TR[start.getMonth()]}`;
+      const endStr = `${end.getDate()} ${MONTHS_TR[end.getMonth()]}`;
+      return `${startStr} – ${endStr}`;
+    }
+    return `${MONTHS_TR[start.getMonth()]} ${start.getFullYear()}`;
+  };
+
+  // Seçili aralıktaki (gün/hafta/ay) kayıtları toplayıp genel toplamı ve
+  // TYT/AYT altında branş bazlı, en çok çözülenden aza doğru sıralı ve
+  // çubukla görselleştirilmiş dağılımı çizer.
+  const renderPage9Summary = () => {
+    const { start, end } = page9GetRangeBounds();
+    const startKey = page9DateKey(start);
+    const endKey = page9DateKey(end);
+    const logsInRange = page9State.logs.filter((log) => log.date >= startKey && log.date <= endKey);
+
+    const total = logsInRange.reduce((sum, log) => sum + log.count, 0);
+    page9SummaryTotal.innerHTML = `${total} <span>soru</span>`;
+    page9RangeLabel.textContent = page9RangeLabelText();
+
+    page9SummaryList.innerHTML = '';
+
+    if (!total) {
+      const empty = document.createElement('div');
+      empty.className = 'page9-summary-empty';
+      empty.textContent = 'Bu aralıkta henüz kayıt yok.';
+      page9SummaryList.appendChild(empty);
+      return;
+    }
+
+    ['tyt', 'ayt'].forEach((track) => {
+      const subjects = page9State.subjects[track];
+      if (!subjects.length) return;
+
+      const counts = subjects
+        .map((subject) => ({
+          subject,
+          count: logsInRange.reduce((sum, log) => (
+            log.track === track && log.subjectId === subject.id ? sum + log.count : sum
+          ), 0)
+        }))
+        .filter((entry) => entry.count > 0)
+        .sort((a, b) => b.count - a.count);
+
+      if (!counts.length) return;
+
+      const trackTotal = counts.reduce((sum, entry) => sum + entry.count, 0);
+      const maxCount = counts[0].count;
+
+      const group = document.createElement('div');
+      group.className = 'page9-summary-group';
+
+      const label = document.createElement('div');
+      label.className = 'page9-summary-group-label';
+      const labelName = document.createElement('span');
+      labelName.textContent = PAGE9_TRACK_LABELS[track];
+      const labelTotal = document.createElement('span');
+      labelTotal.textContent = `${trackTotal} soru`;
+      label.appendChild(labelName);
+      label.appendChild(labelTotal);
+      group.appendChild(label);
+
+      counts.forEach(({ subject, count }) => {
+        const row = document.createElement('div');
+        row.className = 'page9-summary-row';
+
+        const rowTop = document.createElement('div');
+        rowTop.className = 'page9-summary-row-top';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'page9-summary-row-name';
+        const dot = document.createElement('span');
+        dot.className = 'page9-summary-row-dot';
+        dot.style.background = subject.color;
+        const nameText = document.createElement('span');
+        nameText.textContent = subject.name;
+        nameEl.appendChild(dot);
+        nameEl.appendChild(nameText);
+
+        const countEl = document.createElement('span');
+        countEl.className = 'page9-summary-row-count';
+        countEl.textContent = count;
+
+        rowTop.appendChild(nameEl);
+        rowTop.appendChild(countEl);
+
+        const barTrack = document.createElement('div');
+        barTrack.className = 'page9-summary-bar-track';
+        const barFill = document.createElement('div');
+        barFill.className = 'page9-summary-bar-fill';
+        barFill.style.background = subject.color;
+        barFill.style.width = `${Math.max(6, Math.round((count / maxCount) * 100))}%`;
+        barTrack.appendChild(barFill);
+
+        row.appendChild(rowTop);
+        row.appendChild(barTrack);
+        group.appendChild(row);
+      });
+
+      page9SummaryList.appendChild(group);
+    });
+  };
+
+  // ---- İlk render ----
+  page9RenderDateRow();
+  renderPage9SubjectList();
+  renderPage9Summary();
 </script>
 
 <script>
