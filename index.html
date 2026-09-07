@@ -109,6 +109,16 @@
     opacity: 0;
   }
 
+  /* ---------- Kar Yağışı Animasyonu ---------- */
+  /* Tema katmanlarının üzerinde, uygulama içeriğinin altında duran
+     hafif bir canvas katmanı. Dokunma/etkileşimi engellemez. */
+  #snowCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   /* ---------- Sayfalar ---------- */
 
   .app {
@@ -670,6 +680,79 @@
     flex-direction: column;
     align-items: center;
     gap: 24px;
+  }
+
+  /* ---------- Kar Yağışı Açma/Kapama Anahtarı ---------- */
+  .snow-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .snow-toggle-caption {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--theme-text, #fff);
+    transition: color 0.5s ease;
+    user-select: none;
+  }
+
+  .snow-toggle {
+    position: relative;
+    display: inline-flex;
+    width: 56px;
+    height: 32px;
+    cursor: pointer;
+  }
+
+  .snow-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .snow-toggle-track {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.18);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .snow-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 1;
+    transform: translateX(0);
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .snow-toggle input:checked ~ .snow-toggle-track {
+    background-color: #7fc4ff;
+    border-color: #7fc4ff;
+  }
+
+  .snow-toggle input:checked ~ .snow-toggle-track .snow-toggle-thumb {
+    transform: translateX(24px);
+  }
+
+  .snow-toggle input:focus-visible ~ .snow-toggle-track {
+    outline: 2px solid #ff90e8;
+    outline-offset: 2px;
   }
 
   /* From Uiverse.io by ratue1256 (checkbox'a uyarlandı, bağımsız işaretlenebilir) */
@@ -3454,6 +3537,7 @@
 <div class="theme-layer is-visible" id="themeLayerA"></div>
 <div class="theme-layer" id="themeLayerB"></div>
 <div class="pattern-layer" id="patternLayer"></div>
+<canvas id="snowCanvas"></canvas>
 
 <div class="app">
 
@@ -3463,6 +3547,16 @@
       <button>
         <span class="button_top"> Button </span>
       </button>
+
+      <div class="snow-toggle-wrap">
+        <span class="snow-toggle-caption">❄️ Kar Yağışı</span>
+        <label class="snow-toggle">
+          <input type="checkbox" id="snowToggle" checked aria-label="Kar yağışı animasyonunu aç/kapat">
+          <span class="snow-toggle-track">
+            <span class="snow-toggle-thumb"></span>
+          </span>
+        </label>
+      </div>
     </div>
   </section>
 
@@ -7003,6 +7097,8 @@
     });
   }
 </script>
+
+<script src="snow.js" defer></script>
 
 </body>
 </html>

@@ -37,6 +37,22 @@
 
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ---------------- Açma/Kapama durumu ----------------
+  const STORAGE_KEY = 'snowEnabled';
+  function readStoredEnabled() {
+    try {
+      const v = localStorage.getItem(STORAGE_KEY);
+      return v === null ? true : v === '1';
+    } catch (e) {
+      return true;
+    }
+  }
+  function writeStoredEnabled(v) {
+    try { localStorage.setItem(STORAGE_KEY, v ? '1' : '0'); } catch (e) { /* yoksay */ }
+  }
+
+  let snowEnabled = readStoredEnabled();
+
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let width = 0, height = 0;
   let flakes = [];
@@ -397,8 +413,43 @@
     }
   }
 
+  function setEnabled(value) {
+    snowEnabled = !!value;
+    writeStoredEnabled(snowEnabled);
+    canvas.style.display = snowEnabled ? '' : 'none';
+
+    if (snowEnabled) {
+      if (reduceMotion) renderStaticFrame();
+      else if (!document.hidden) start();
+    } else {
+      stop();
+    }
+
+    const toggleEl = document.getElementById('snowToggle');
+    if (toggleEl && toggleEl.checked !== snowEnabled) toggleEl.checked = snowEnabled;
+  }
+
+  function wireToggle() {
+    const toggleEl = document.getElementById('snowToggle');
+    if (!toggleEl) return;
+    toggleEl.checked = snowEnabled;
+    toggleEl.addEventListener('change', function () {
+      setEnabled(toggleEl.checked);
+    });
+  }
+
+  // Dışarıdan kontrol edilebilmesi için (ör. başka bir anahtar eklenirse) küçük bir API
+  window.SnowFX = {
+    enable: function () { setEnabled(true); },
+    disable: function () { setEnabled(false); },
+    toggle: function () { setEnabled(!snowEnabled); },
+    isEnabled: function () { return snowEnabled; }
+  };
+
   // ---------------- Başlat ----------------
+  canvas.style.display = snowEnabled ? '' : 'none';
   resize();
+  wireToggle();
 
   let resizeTimer = null;
   window.addEventListener('resize', function () {
@@ -408,10 +459,12 @@
 
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) stop();
-    else if (!reduceMotion) start();
+    else if (snowEnabled && !reduceMotion) start();
   });
 
-  if (reduceMotion) {
+  if (!snowEnabled) {
+    // Kapalı: hiçbir şey çizme, döngü başlatma.
+  } else if (reduceMotion) {
     renderStaticFrame();
   } else {
     start();
